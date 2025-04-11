@@ -1,0 +1,3934 @@
+
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Sistema de Registro de Casos de Extorsión</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome para iconos -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --light-color: #ecf0f1;
+      --dark-color: #34495e;
+      --success-color: #27ae60;
+      --warning-color: #f39c12;
+      --danger-color: #e74c3c;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      color: var(--dark-color);
+    }
+    
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .section-card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      padding: 20px;
+      margin-bottom: 25px;
+      transition: all 0.3s ease;
+    }
+    
+    .section-card:hover {
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .section-title {
+      color: var(--primary-color);
+      border-bottom: 2px solid var(--secondary-color);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+    
+    .section-title i {
+      margin-right: 10px;
+      color: var(--secondary-color);
+    }
+    
+    .form-label {
+      font-weight: 500;
+      color: var(--dark-color);
+    }
+    
+    .nav-tabs {
+      border-bottom: 2px solid var(--secondary-color);
+      margin-bottom: 25px;
+    }
+    
+    .nav-tabs .nav-link {
+      border: none;
+      color: var(--dark-color);
+      font-weight: 500;
+      padding: 12px 20px;
+      border-radius: 8px 8px 0 0;
+      margin-right: 5px;
+      transition: all 0.2s ease;
+    }
+    
+    .nav-tabs .nav-link:hover {
+      background-color: rgba(52, 152, 219, 0.1);
+    }
+    
+    .nav-tabs .nav-link.active {
+      color: white;
+      background-color: var(--secondary-color);
+      font-weight: 600;
+    }
+    
+    .btn-primary {
+      background-color: var(--secondary-color);
+      border-color: var(--secondary-color);
+      padding: 8px 20px;
+      font-weight: 500;
+    }
+    
+    .btn-primary:hover {
+      background-color: #2980b9;
+      border-color: #2980b9;
+    }
+    
+    .btn-icon {
+      background: none;
+      border: none;
+      color: var(--secondary-color);
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    
+    .btn-icon:hover {
+      transform: scale(1.2);
+    }
+    
+    .btn-edit {
+      color: var(--secondary-color);
+    }
+    
+    .btn-delete {
+      color: var(--danger-color);
+    }
+    
+    .btn-view {
+      color: var(--success-color);
+    }
+    
+    .item-list {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .item-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      border: 1px solid #e1e5e8;
+      border-radius: 6px;
+      padding: 10px;
+      background-color: #f8f9fa;
+    }
+    
+    .dynamic-item {
+      position: relative;
+      margin-bottom: 15px;
+      padding: 15px;
+      border: 1px solid #e1e5e8;
+      border-radius: 6px;
+      background-color: #f8f9fa;
+    }
+    
+    .badge-custom {
+      padding: 6px 10px;
+      font-weight: 500;
+      border-radius: 30px;
+    }
+    
+    .spinner-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      visibility: hidden;
+      opacity: 0;
+      transition: all 0.3s;
+    }
+    
+    .spinner-overlay.show {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    /* Mejora de la responsividad */
+    @media (max-width: 768px) {
+      .section-card {
+        padding: 15px;
+      }
+      
+      .nav-tabs .nav-link {
+        padding: 8px 15px;
+      }
+      
+      .form-label {
+        font-size: 0.95rem;
+      }
+      
+      .section-title {
+        font-size: 1.3rem;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .nav-tabs .nav-link {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+      }
+      
+      .section-title {
+        font-size: 1.2rem;
+      }
+      
+      .item-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .btn-icon {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Spinner para carga -->
+  <div class="spinner-overlay" id="loadingSpinner">
+    <div class="spinner-border text-light" role="status" style="width: 3rem; height: 3rem;">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
+  <div class="app-container py-4">
+    <header class="text-center mb-4">
+      <h1 class="display-5 fw-bold">Sistema de Registro de Bandas Criminales</h1>
+      <p class="text-muted">Ministerio Público - Fiscalía Especializadas contra la Criminalidad Organizada</p>
+    </header>
+
+    <!-- Agregar esto en la parte superior de tu archivo Index.html, justo después del header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <span class="text-muted me-2" id="usuario-actual"></span>
+        <button type="button" class="btn btn-outline-danger" id="btn-cerrar-sesion">
+          <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
+        </button>
+      </div>
+    </div>
+
+    
+    <!-- Pestañas principales -->
+    <ul class="nav nav-tabs" id="mainTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="form-tab" data-bs-toggle="tab" data-bs-target="#form-panel" type="button" role="tab" aria-controls="form-panel" aria-selected="true">
+          <i class="fas fa-file-alt me-2"></i>Formulario
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="records-tab" data-bs-toggle="tab" data-bs-target="#records-panel" type="button" role="tab" aria-controls="records-panel" aria-selected="false">
+          <i class="fas fa-table me-2"></i>Registros
+        </button>
+      </li>
+    </ul>
+    
+    <div class="tab-content" id="mainTabContent">
+      <!-- Panel de Formulario -->
+      <div class="tab-pane fade show active" id="form-panel" role="tabpanel" aria-labelledby="form-tab">
+        <form id="casoForm">
+          <input type="hidden" id="id" name="id">
+          <input type="hidden" id="modoEdicion" name="modoEdicion" value="false">
+          
+          <!-- 1. Información General -->
+          <div class="section-card">
+            <h3 class="section-title"><i class="fas fa-info-circle"></i>1. Información General</h3>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="fiscalia" class="form-label">Fiscalía</label>
+                <input type="text" class="form-control" id="fiscalia" name="fiscalia" required>
+              </div>
+              <div class="col-md-6">
+                <label for="fiscalacargo" class="form-label">Fiscal a Cargo</label>
+                <input type="text" class="form-control" id="fiscalacargo" name="fiscalacargo" required>
+              </div>
+              <div class="col-md-6">
+                <label for="unidadInteligencia" class="form-label">Unidad a Cargo de Acciones de Inteligencia</label>
+                <input type="text" class="form-control" id="unidadInteligencia" name="unidadInteligencia">
+              </div>
+              <div class="col-md-6">
+                <label for="instructorCargo" class="form-label">Instructor a Cargo</label>
+                <input type="text" class="form-control" id="instructorCargo" name="instructorCargo">
+              </div>
+            </div>
+          </div>
+          
+          <!-- 2. Detalles del Caso -->
+          <div class="section-card">
+            <h3 class="section-title"><i class="fas fa-folder-open"></i>2. Detalles del Caso</h3>
+            <div class="row g-3">
+              <!-- Forma de Inicio de Investigación con nueva lista -->
+              <div class="col-md-6">
+                <label for="formaInicio" class="form-label">Forma de Inicio de Investigación</label>
+                <div class="input-group">
+                  <select class="form-select" id="formaInicio" name="formaInicio" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="Denuncia de Parte">Denuncia de Parte</option>
+                    <option value="Información de Fuente Humana">Información de Fuente Humana</option>
+                    <option value="Informante">Informante</option>
+                    <option value="Testigo Protegido">Testigo Protegido</option>
+                    <option value="Búsqueda de Fuente Abierta">Búsqueda de Fuente Abierta</option>
+                    <option value="Colaborador Eficaz">Colaborador Eficaz</option>
+                    <option value="Otros">Otros</option>
+                  </select>
+                  <button class="btn btn-outline-secondary" type="button" onclick="mostrarModalOtros('formaInicio')" id="btnOtrosFormaInicio" style="display: none;">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+                <div id="otrosFormaInicioContainer" style="display: none;" class="mt-2">
+                  <input type="text" class="form-control" id="otrosFormaInicio" placeholder="Especifique otra forma de inicio">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="carpetaFiscal" class="form-label">Carpeta Fiscal</label>
+                <input type="text" class="form-control" id="carpetaFiscal" name="carpetaFiscal" required>
+              </div>
+              <div class="col-md-6">
+                <label for="fechaHecho" class="form-label">Fecha del Hecho</label>
+                <input type="date" class="form-control" id="fechaHecho" name="fechaHecho">
+              </div>
+              <div class="col-md-6">
+                <label for="fechaIngresoFiscal" class="form-label">Fecha Ingreso Carpeta Fiscal</label>
+                <input type="date" class="form-control" id="fechaIngresoFiscal" name="fechaIngresoFiscal">
+              </div>
+
+            </div>
+          </div>
+          
+          <!-- 3. Información del Agraviado -->
+          <div class="section-card">
+            <h3 class="section-title"><i class="fas fa-user-shield"></i>3. Información del Agraviado</h3>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="tipoAgraviado" class="form-label">Tipo de Agraviado</label>
+                <select class="form-select" id="tipoAgraviado" name="tipoAgraviado" required>
+                  <option value="">Seleccionar...</option>
+                  <option value="Natural">Natural</option>
+                  <option value="Jurídica">Jurídica</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Agraviados</label>
+                <div id="agraviados-container">
+                  <!-- Aquí se agregarán dinámicamente los agraviados -->
+                </div>
+                <input type="hidden" id="agraviadosJson" name="agraviadosJson">
+                <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btnAgregarAgraviado">
+                  <i class="fas fa-plus me-2"></i>Agregar Agraviado
+                </button>
+              </div>
+            </div>
+            
+            <!-- Nuevas secciones de Función y Tipo de Empresa -->
+            <div class="row g-3 mt-3">
+              <div class="col-md-6">
+                <label class="form-label">Función que Ejerce</label>
+                <select class="form-select" id="funcionAgraviado" name="funcionAgraviado">
+                  <option value="">Seleccionar...</option>
+                  <option value="Pública">Función Pública</option>
+                  <option value="Privada">Función Privada</option>
+                </select>
+              </div>
+              <!-- Tipo de Empresa con posibilidad de agregar múltiples -->
+              <div class="col-md-6">
+                <label class="form-label">Tipo de Empresa</label>
+                <div id="empresas-container">
+                  <!-- Aquí se agregarán dinámicamente las empresas -->
+                  <div class="input-group mb-2">
+                    <select class="form-select empresa-tipo">
+                      <option value="">Seleccionar...</option>
+                      <option value="Pública">Empresa Pública</option>
+                      <option value="Privada">Empresa Privada</option>
+                    </select>
+                    <input type="text" class="form-control empresa-nombre" placeholder="Nombre de la empresa">
+                    <button class="btn btn-outline-secondary" type="button" onclick="agregarEmpresa()">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+                <div id="lista-empresas">
+                  <!-- Aquí se mostrarán las empresas agregadas -->
+                </div>
+                <input type="hidden" id="empresasJson" name="empresasJson" value="[]">
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal para Nombre de Empresa -->
+          <div class="modal fade" id="empresaModal" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Nombre de la Empresa</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  <input type="text" id="nombreEmpresa" class="form-control" placeholder="Ingrese el nombre de la empresa">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="button" class="btn btn-primary" id="guardarNombreEmpresa">Guardar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 4. Información del Denunciado -->
+          <div class="section-card">
+            <h3 class="section-title"><i class="fas fa-user-times"></i>4. Información del Denunciado</h3>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="delitos" class="form-label">Delitos</label>
+                <input type="text" class="form-control" id="delitos" name="delitos" required>
+              </div>
+              <div class="col-md-6">
+                <label for="lugarHechos" class="form-label">Lugar de los Hechos</label>
+                <input type="text" class="form-control" id="lugarHechos" name="lugarHechos" required>
+              </div>
+              <div class="col-12 mt-3">
+                <label class="form-label">Denunciado o Alias</label>
+                <div id="denunciados-container">
+                  <!-- Aquí se agregarán dinámicamente los denunciados -->
+                </div>
+                <input type="hidden" id="denunciadosJson" name="denunciadosJson">
+                <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btnAgregarDenunciado">
+                  <i class="fas fa-plus me-2"></i>Agregar Denunciado
+                </button>
+              </div>
+
+              <!-- Datos de Interés del Denunciado con lista------------------------------------------------------ -->
+              <div class="col-md-6">
+                <label for="datosInteresDenunciado" class="form-label">Datos de Interés del Denunciado</label>
+                <div class="mb-2">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input datos-interes-check" type="checkbox" value="Tatuajes" id="datoInteres-tatuajes">
+                    <label class="form-check-label" for="datoInteres-tatuajes">Tatuajes</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input datos-interes-check" type="checkbox" value="Cicatrices" id="datoInteres-cicatrices">
+                    <label class="form-check-label" for="datoInteres-cicatrices">Cicatrices</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" value="Otros" id="datoInteres-otros">
+                    <label class="form-check-label" for="datoInteres-otros">Otros</label>
+                  </div>
+                </div>
+                <div id="otrosDatosInteresContainer" style="display: none;">
+                  <div class="input-group mb-2">
+                    <input type="text" class="form-control" id="otrosDatosInteres" placeholder="Especificar otros datos de interés">
+                    <button class="btn btn-outline-secondary" type="button" id="btnAgregarOtroDatoInteres">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                  <div id="otros-datos-interes-lista" class="mt-2">
+                    <!-- Aquí se mostrarán los datos de interés personalizados -->
+                  </div>
+                </div>
+                <input type="hidden" id="datosInteresDenunciadoJson" name="datosInteresDenunciadoJson" value="[]">
+              </div>
+
+              <!-- Nombre/Apodo de Banda Criminal con botón agregar -->
+              <div class="col-md-6">
+                <label for="nombreBandaCriminal" class="form-label">Nombre/Apodo de Banda Criminal</label>
+                <div id="bandas-container">
+                  <!-- Aquí se agregarán dinámicamente las bandas -->
+                  <div class="input-group mb-2">
+                    <input type="text" class="form-control banda-input" placeholder="Nombre o apodo de la banda">
+                    <button class="btn btn-outline-secondary" type="button" onclick="agregarBanda()">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                  
+                </div>
+                <input type="hidden" id="bandasCriminalesJson" name="bandasCriminalesJson">
+              </div>
+
+              <!-- Cantidad de Miembros con nombre modificado -->
+              <div class="col-md-6">
+                <label for="cantidadMiembrosBanda" class="form-label">Cantidad de miembros de la banda/organización criminal</label>
+                <input type="number" class="form-control" id="cantidadMiembrosBanda" name="cantidadMiembrosBanda" min="0" placeholder="Ingrese la cantidad">
+              </div>
+              <!-- -------------------------------------------------------------------------- -->
+
+              <div class="col-md-6">
+                <label for="modalidadViolencia" class="form-label" >Modalidad de Violencia</label>
+                <textarea class="form-control" id="modalidadViolencia" name="modalidadViolencia" rows="2" placeholder="Detallar"></textarea>
+              </div>
+              <div class="col-md-6">
+                <label for="modalidadAmenaza" class="form-label">Modalidad de Amenaza</label>
+                <textarea class="form-control" id="modalidadAmenaza" name="modalidadAmenaza" rows="2" placeholder="Detallar"></textarea>
+              </div>
+              <div class="col-md-6">
+                <label for="atentadosCometidos" class="form-label">Atentados Cometidos</label>
+                <textarea class="form-control" id="atentadosCometidos" name="atentadosCometidos" rows="2" placeholder="Detallar"></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 5. Instrumentos Utilizados para la Extorsión -->
+          <div class="section-card">
+            <h3 class="section-title"><i class="fas fa-tools"></i>5. Instrumentos y Métodos de Extorsión</h3>
+            <div class="row g-3">
+              <!-- Instrumentos Utilizados para la Extorsión con nueva lista -->
+              <div class="col-md-6">
+                <label class="form-label">Instrumentos Utilizados para la Extorsión</label>
+                <div id="instrumentos-container">
+                  <div class="form-check">
+                    <input class="form-check-input instrumento-check" type="checkbox" value="Motos" id="instrumento-motos">
+                    <label class="form-check-label" for="instrumento-motos">Motos</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input instrumento-check" type="checkbox" value="Carros" id="instrumento-carros">
+                    <label class="form-check-label" for="instrumento-carros">Carros</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="Otro" id="instrumento-otro">
+                    <label class="form-check-label" for="instrumento-otro">Otro</label>
+                  </div>
+                  <div id="instrumento-otro-container" style="display: none;" class="mt-2">
+                    <div class="input-group mb-2">
+                      <input type="text" class="form-control" id="instrumento-otro-texto" placeholder="Especificar otro instrumento">
+                      <button class="btn btn-outline-secondary" type="button" id="btnAgregarInstrumentoOtro">
+                        <i class="fas fa-plus"></i>
+                      </button>
+                    </div>
+                    <div id="otros-instrumentos-lista" class="mt-2">
+                      <!-- Aquí se mostrarán los instrumentos personalizados -->
+                    </div>
+                  </div>
+                </div>
+                <input type="hidden" id="instrumentosJson" name="instrumentosJson" value="[]">
+              </div>
+
+              <!-- Forma que se Obliga el Pago con nueva lista -->
+              <div class="col-md-6">
+                <label for="formaPago" class="form-label">Forma que se Obliga el Pago</label>
+                <select class="form-select" id="formaPago" name="formaPago">
+                  <option value="">Seleccionar...</option>
+                  <option value="Yape">Yape</option>
+                  <option value="Plin">Plin</option>
+                  <option value="Transferencias">Transferencias</option>
+                  <option value="Efectivo">Efectivo</option>
+                  <option value="Otro">Otro</option>
+                </select>
+                <div id="otraFormaPagoContainer" style="display: none;" class="mt-2">
+                  <input type="text" class="form-control" id="otraFormaPago" placeholder="Especificar otra forma de pago">
+                </div>
+              </div>
+
+
+              <!-- -------------------------------------------------------------------------- -->
+              <div class="col-md-6">
+                <label class="form-label">Números Telefónicos Utilizados para Extorsión</label>
+                <div id="numeros-container">
+                  <!-- Aquí se agregarán dinámicamente los números -->
+                </div>
+                <input type="hidden" id="numerosTelefonicosJson" name="numerosTelefonicosJson">
+                <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btnAgregarNumero">
+                  <i class="fas fa-plus me-2"></i>Agregar Número
+                </button>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">IMEI de los Números Telefónicos</label>
+                <div id="imeis-container">
+                  <!-- Aquí se agregarán dinámicamente los IMEIs -->
+                </div>
+                <input type="hidden" id="imeisTelefonicosJson" name="imeisTelefonicosJson">
+                <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btnAgregarImei">
+                  <i class="fas fa-plus me-2"></i>Agregar IMEI
+                </button>
+              </div>
+              <!-- Número para método de Pago con botón agregar más -->
+              <div class="col-md-6">
+                <label class="form-label">Número Telefónico o Cuenta Corriente para método de Pago</label>
+                <div id="cuentas-pago-container">
+                  <!-- Aquí se agregarán dinámicamente las cuentas -->
+                </div>
+              <input type="hidden" id="cuentasPagoJson" name="cuentasPagoJson">
+              <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btnAgregarCuenta">
+                <i class="fas fa-plus me-2"></i>Agregar Cuenta
+              </button>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Nombres de Titulares de Pago</label>
+                <div id="titulares-container">
+                  <!-- Aquí se agregarán dinámicamente los titulares -->
+                </div>
+                <input type="hidden" id="titularesPagoJson" name="titularesPagoJson">
+                <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btnAgregarTitular">
+                  <i class="fas fa-plus me-2"></i>Agregar Titular
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 6. Datos de Interés de Pagos -->
+          <div class="section-card">
+            <h3 class="section-title"><i class="fas fa-money-bill-wave"></i>6. Datos de Interés de Pagos</h3>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="tipoPago" class="form-label">Tipo de Pago</label>
+                <select class="form-select" id="tipoPago" name="tipoPago">
+                  <option value="">Seleccionar...</option>
+                  <option value="Mensual">Mensual</option>
+                  <option value="Quincenal">Quincenal</option>
+                  <option value="Semanal">Semanal</option>
+                  <option value="Único">Único</option>
+                  <option value="Otro">Otro</option>
+                </select>
+                <div id="tipoPagoOtroContainer" style="display: none;" class="mt-2">
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="tipoPagoOtros" name="tipoPagoOtros" placeholder="Especifique otro tipo">
+                    <button class="btn btn-outline-secondary" type="button" id="btnGuardarTipoPagoOtro">
+                      <i class="fas fa-check"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="montoSolicitado" class="form-label">Monto Solicitado</label>
+                <div class="input-group">
+                  <span class="input-group-text">S/</span>
+                  <input type="number" class="form-control" id="montoSolicitado" name="montoSolicitado" step="0.01" min="0">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="montoPagado" class="form-label">Monto Pagado</label>
+                <div class="input-group">
+                  <span class="input-group-text">S/</span>
+                  <input type="number" class="form-control" id="montoPagado" name="montoPagado" step="0.01" min="0">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="numeroPagos" class="form-label">Número de Veces que se Efectuó el Pago</label>
+                <input type="number" class="form-control" id="numeroPagos" name="numeroPagos" min="0">
+              </div>
+            </div>
+          </div>
+
+          <!-- 7. Sumilla de Hechos -->
+          <div class="section-card">
+            <h3 class="section-title"><i class="fas fa-align-left"></i>7. Sumilla de los Hechos</h3>
+            <div class="row">
+              <div class="col-12">
+                <textarea class="form-control" id="sumillaHechos" name="sumillaHechos" rows="5" maxlength="500" onkeyup="contarCaracteres(this, 'contadorSumilla')" required></textarea>
+                <small class="text-muted d-flex justify-content-end mt-1"><span id="contadorSumilla">0</span>/500 caracteres</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- 8. Observaciones -->
+          <div class="section-card">
+            <h3 class="section-title"><i class="fas fa-clipboard"></i>8. Observaciones</h3>
+            <div class="row">
+              <div class="col-12">
+                <textarea class="form-control" id="observaciones" name="observaciones" rows="3" maxlength="500" onkeyup="contarCaracteres(this, 'contadorObservaciones')"></textarea>
+                <small class="text-muted d-flex justify-content-end mt-1"><span id="contadorObservaciones">0</span>/500 caracteres</small>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Botones del formulario -->
+          <div class="d-flex justify-content-between mt-4 mb-5">
+            <button type="button" class="btn btn-secondary" id="btnLimpiar">
+              <i class="fas fa-eraser me-2"></i>Limpiar Formulario
+            </button>
+            <button type="submit" class="btn btn-primary" id="btnGuardar">
+              <i class="fas fa-save me-2"></i>Guardar Registro
+            </button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Panel de Registros -->
+      <div class="tab-pane fade" id="records-panel" role="tabpanel" aria-labelledby="records-tab">
+        <div class="section-card">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="section-title mb-0"><i class="fas fa-table"></i>Registros de Casos</h3>
+            <div class="input-group" style="max-width: 300px;">
+              <input type="text" class="form-control" id="buscarRegistro" placeholder="Buscar...">
+              <button class="btn btn-outline-secondary" type="button" id="btnBuscar">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+            <!-- Cambiar el botón existente -->
+            <button class="btn btn-primary ms-2" type="button" id="btnExportarPDF">
+              <i class="fas fa-file-pdf me-2"></i>Exportar PDF
+            </button>
+            <!-- Botón para exportar a Excel -->
+            <button id="btnExportarExcel" class="btn btn-success" 
+              onclick="google.script.run
+                      .withSuccessHandler(onExcelSuccess)
+                      .withFailureHandler(onExcelError)
+                      .handleExportarExcel()">
+              <i class="fas fa-file-excel"></i> Exportar a Excel
+            </button>
+          </div>
+          
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Carpeta Fiscal</th>
+                  <th>Fiscal a Cargo</th>
+                  <th>Fecha de Ingreso</th>
+                  <th>Agraviado</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="registros-body">
+                <!-- Aquí se cargarán los registros dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+          
+          <div id="no-registros-message" class="alert alert-info text-center" style="display: none;">
+            <i class="fas fa-info-circle me-2"></i>No hay registros disponibles.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal para Ver Detalles -->
+  <div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-light">
+          <h5 class="modal-title" id="detalleModalLabel">Detalles del Caso</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="detalleModalBody">
+          <!-- Contenido dinámico -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary" id="btnEditarDesdeDetalle">Editar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal de confirmación de eliminación -->
+  <div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="eliminarModalLabel">Confirmar Eliminación</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Está seguro que desea eliminar este registro? Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Bootstrap JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+
+
+
+    // Variables globales
+    let registrosLocales = [];
+    let registroAEliminarId = null;
+    let modoEdicion = false;
+    
+    // Elementos dinámicos del formulario
+    let agraviados = [];
+    let denunciados = [];
+    let numerosTelefonicos = [];
+    let imeisTelefonicos = [];
+    let titularesPago = [];
+  
+    // Variables para elementos dinámicos
+    let bandasCriminales = [];
+    let otrosInstrumentos = [];
+    let empresas = [];
+    let cuentasPago = []; // Esta ya debería existir en tu código
+
+
+    // Reemplaza la función actual de inicialización de event listeners con esta
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log("DOM cargado, inicializando aplicación...");
+
+  
+      // Inicializar la hoja de cálculo primero
+      inicializarSheet();
+      cargarRegistrosLocales();
+
+      
+      const btnExcel = document.getElementById('btnExportarExcel');
+      if (btnExcel) {
+        btnExcel.addEventListener('click', exportarExcel);
+      }
+
+      // Inicializar contadores para sumillaHechos y observaciones
+      if (document.getElementById("sumillaHechos")) {
+        contarCaracteres(document.getElementById("sumillaHechos"), "contadorSumilla");
+      }
+      if (document.getElementById("observaciones")) {
+        contarCaracteres(document.getElementById("observaciones"), "contadorObservaciones");
+      }
+
+      
+      // Comprobación de token y datos de sesión
+      const token = obtenerTokenSesion();
+      console.log("Token de sesión:", token ? "Presente" : "No encontrado");
+      
+      // Función segura para agregar event listeners
+      function addSafeEventListener(selector, event, handler) {
+        const element = (typeof selector === 'string') ? document.getElementById(selector) : selector;
+        
+        if (element) {
+          // Eliminar listener existente si hay alguno (clonar y reemplazar)
+          const newElement = element.cloneNode(true);
+          if (element.parentNode) {
+            element.parentNode.replaceChild(newElement, element);
+          }
+          
+          // Agregar nuevo listener
+          newElement.addEventListener(event, handler);
+          console.log(`Event listener agregado a ${selector}`);
+          return newElement;
+        } else {
+          console.error(`Elemento '${selector}' no encontrado`);
+          return null;
+        }
+      }
+      
+      // Configurar botón de cerrar sesión
+      const btnCerrarSesion = document.getElementById('btn-cerrar-sesion');
+      if (btnCerrarSesion) {
+        console.log("Botón de cerrar sesión encontrado, configurando...");
+        addSafeEventListener(btnCerrarSesion, 'click', cerrarSesion);
+      }
+      
+      // ----- LISTENERS DE FORMULARIO PRINCIPAL -----
+      
+      // Formulario principal
+      const casoForm = document.getElementById('casoForm');
+      if (casoForm) {
+        addSafeEventListener(casoForm, 'submit', guardarFormulario);
+        console.log("Formulario principal configurado");
+      }
+      
+      // Botones de acciones principales
+      const btnLimpiar = document.getElementById('btnLimpiar');
+      if (btnLimpiar) {
+        addSafeEventListener(btnLimpiar, 'click', limpiarFormulario);
+      }
+      
+      // ----- ELEMENTOS DINÁMICOS -----
+      
+      // Agraviados
+      const btnAgregarAgraviado = document.getElementById('btnAgregarAgraviado');
+      if (btnAgregarAgraviado) {
+        addSafeEventListener(btnAgregarAgraviado, 'click', agregarAgraviado);
+      }
+      
+      // Denunciados
+      const btnAgregarDenunciado = document.getElementById('btnAgregarDenunciado');
+      if (btnAgregarDenunciado) {
+        addSafeEventListener(btnAgregarDenunciado, 'click', agregarDenunciado);
+      }
+      
+      // Números telefónicos
+      const btnAgregarNumero = document.getElementById('btnAgregarNumero');
+      if (btnAgregarNumero) {
+        addSafeEventListener(btnAgregarNumero, 'click', agregarNumeroTelefonico);
+      }
+      
+      // IMEI
+      const btnAgregarImei = document.getElementById('btnAgregarImei');
+      if (btnAgregarImei) {
+        addSafeEventListener(btnAgregarImei, 'click', agregarImeiTelefonico);
+      }
+      
+      // Titulares de pago
+      const btnAgregarTitular = document.getElementById('btnAgregarTitular');
+      if (btnAgregarTitular) {
+        addSafeEventListener(btnAgregarTitular, 'click', agregarTitularPago);
+      }
+      
+      // Cuentas de pago
+      const btnAgregarCuenta = document.getElementById('btnAgregarCuenta');
+      if (btnAgregarCuenta) {
+        addSafeEventListener(btnAgregarCuenta, 'click', agregarCuentaPago);
+      }
+      
+      // ----- LISTENERS DE MODALES Y ACCIONES -----
+      
+      // Modal de eliminación
+      const btnConfirmarEliminar = document.getElementById('btnConfirmarEliminar');
+      if (btnConfirmarEliminar) {
+        addSafeEventListener(btnConfirmarEliminar, 'click', eliminarRegistro);
+      }
+      
+      // Modal de detalle
+      const btnEditarDesdeDetalle = document.getElementById('btnEditarDesdeDetalle');
+      if (btnEditarDesdeDetalle) {
+        addSafeEventListener(btnEditarDesdeDetalle, 'click', editarDesdeDetalle);
+      }
+      
+      // Búsqueda
+      const btnBuscar = document.getElementById('btnBuscar');
+      if (btnBuscar) {
+        addSafeEventListener(btnBuscar, 'click', buscarRegistros);
+      }
+      
+      // Campo de búsqueda con Enter
+      const buscarRegistroElement = document.getElementById('buscarRegistro');
+      if (buscarRegistroElement) {
+        addSafeEventListener(buscarRegistroElement, 'keyup', function(e) {
+          if (e.key === 'Enter') buscarRegistros();
+        });
+      }
+      
+      // Exportación a PDF
+      const btnExportarPDF = document.getElementById('btnExportarPDF');
+      if (btnExportarPDF) {
+        addSafeEventListener(btnExportarPDF, 'click', exportarSheetAPDF);
+      }
+
+
+      // Manejador para el botón de exportar a Excel
+      document.getElementById('btnExportarExcel').addEventListener('click', function() {
+        // Mostrar spinner de carga
+        Swal.fire({
+          title: 'Exportando a Excel',
+          text: 'Generando archivo Excel, por favor espere...',
+          didOpen: () => {
+            Swal.showLoading();
+          },
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false
+        });
+        
+        // Llamar a la función del servidor
+        google.script.run
+          .withSuccessHandler(function(response) {
+            if (response.success) {
+              // Mostrar mensaje de éxito con enlace de descarga
+              Swal.fire({
+                title: '¡Éxito!',
+                html: `El archivo Excel ha sido creado correctamente.<br><br>
+                      <a href="${response.downloadUrl}" target="_blank" class="btn btn-success">
+                        <i class="fas fa-download"></i> Descargar Excel
+                      </a>`,
+                icon: 'success',
+                confirmButtonText: 'Cerrar'
+              });
+            } else {
+              // Mostrar mensaje de error
+              Swal.fire({
+                title: 'Error',
+                text: response.message,
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+              });
+            }
+          })
+          .withFailureHandler(function(error) {
+            // Mostrar mensaje de error
+            Swal.fire({
+              title: 'Error',
+              text: 'Hubo un problema al exportar a Excel: ' + error.message,
+              icon: 'error',
+              confirmButtonText: 'Cerrar'
+            });
+          })
+          .handleExportarExcel();
+      });
+      
+      // ----- CONFIGURAR CAMPOS ESPECIALES -----
+      
+      // Forma de inicio "Otros"
+      const formaInicioSelect = document.getElementById('formaInicio');
+      if (formaInicioSelect) {
+        addSafeEventListener(formaInicioSelect, 'change', function() {
+          const container = document.getElementById('otrosFormaInicioContainer');
+          const btn = document.getElementById('btnOtrosFormaInicio');
+          if (container && btn) {
+            container.style.display = this.value === 'Otros' ? 'block' : 'none';
+            btn.style.display = this.value === 'Otros' ? 'block' : 'none';
+          }
+        });
+      }
+      
+      // Datos de interés "Otros"
+      const datoInteresOtros = document.getElementById('datoInteres-otros');
+      if (datoInteresOtros) {
+        addSafeEventListener(datoInteresOtros, 'change', function() {
+          const container = document.getElementById('otrosDatosInteresContainer');
+          if (container) {
+            container.style.display = this.checked ? 'block' : 'none';
+            if (this.checked) {
+              const input = document.getElementById('otrosDatosInteres');
+              if (input) input.focus();
+            }
+          }
+        });
+      }
+      
+      // Botón para agregar otro dato de interés
+      const btnAgregarOtroDatoInteres = document.getElementById('btnAgregarOtroDatoInteres');
+      if (btnAgregarOtroDatoInteres) {
+        addSafeEventListener(btnAgregarOtroDatoInteres, 'click', function() {
+          if (typeof agregarOtroDatoInteres === 'function') {
+            agregarOtroDatoInteres();
+          } else {
+            console.error("Función agregarOtroDatoInteres no definida");
+          }
+        });
+      }
+      
+      // Campo de otro dato con Enter
+      const otrosDatosInteres = document.getElementById('otrosDatosInteres');
+      if (otrosDatosInteres) {
+        addSafeEventListener(otrosDatosInteres, 'keyup', function(e) {
+          if (e.key === 'Enter' && typeof agregarOtroDatoInteres === 'function') {
+            agregarOtroDatoInteres();
+          }
+        });
+      }
+      
+      // Forma de pago "Otro"
+      const formaPago = document.getElementById('formaPago');
+      if (formaPago) {
+        addSafeEventListener(formaPago, 'change', function() {
+          const container = document.getElementById('otraFormaPagoContainer');
+          if (container) {
+            container.style.display = this.value === 'Otro' ? 'block' : 'none';
+          }
+        });
+      }
+      
+      // Tipo de pago "Otro"
+      const tipoPago = document.getElementById('tipoPago');
+      if (tipoPago) {
+        addSafeEventListener(tipoPago, 'change', function() {
+          const container = document.getElementById('tipoPagoOtroContainer');
+          if (container) {
+            container.style.display = this.value === 'Otro' ? 'block' : 'none';
+            
+            if (this.value === 'Otro') {
+              const input = document.getElementById('tipoPagoOtros');
+              if (input) input.focus();
+            }
+          }
+        });
+      }
+      
+      // Botón para guardar tipo de pago personalizado
+      const btnGuardarTipoPagoOtro = document.getElementById('btnGuardarTipoPagoOtro');
+      if (btnGuardarTipoPagoOtro) {
+        addSafeEventListener(btnGuardarTipoPagoOtro, 'click', function() {
+          const otroValor = document.getElementById('tipoPagoOtros').value.trim();
+          if (otroValor) {
+            // Crear nueva opción
+            const tipoPagoSelect = document.getElementById('tipoPago');
+            const nuevaOpcion = document.createElement('option');
+            nuevaOpcion.value = 'Custom:' + otroValor;
+            nuevaOpcion.textContent = otroValor;
+            tipoPagoSelect.appendChild(nuevaOpcion);
+            
+            // Seleccionar nueva opción
+            tipoPagoSelect.value = 'Custom:' + otroValor;
+            
+            // Ocultar contenedor
+            document.getElementById('tipoPagoOtroContainer').style.display = 'none';
+            mostrarAlerta('Tipo de pago personalizado agregado', 'success');
+          } else {
+            mostrarAlerta('Por favor ingrese un valor', 'warning');
+          }
+        });
+      }
+
+      // También agregar al checkbox de "Otro"-------------------------------------------------------
+      const instrumentoOtro = document.getElementById('instrumento-otro');
+      if (instrumentoOtro) {
+        instrumentoOtro.addEventListener('change', function() {
+          const container = document.getElementById('instrumento-otro-container');
+          if (container) {
+            container.style.display = this.checked ? 'block' : 'none';
+            
+            if (this.checked) {
+              const input = document.getElementById('instrumento-otro-texto');
+              if (input) input.focus();
+            }
+          }
+          actualizarInstrumentosJson(); // Actualizar JSON cuando cambia
+        });
+      }      
+      
+      
+      // Botón para agregar otro instrumento
+      const btnAgregarInstrumentoOtro = document.getElementById('btnAgregarInstrumentoOtro');
+      if (btnAgregarInstrumentoOtro) {
+        addSafeEventListener(btnAgregarInstrumentoOtro, 'click', function() {
+          if (typeof agregarOtroInstrumento === 'function') {
+            agregarOtroInstrumento();
+          } else {
+            console.error("Función agregarOtroInstrumento no definida");
+          }
+        });
+      }
+      
+      // Campo de otro instrumento con Enter
+      const instrumentoOtroTexto = document.getElementById('instrumento-otro-texto');
+      if (instrumentoOtroTexto) {
+        addSafeEventListener(instrumentoOtroTexto, 'keyup', function(e) {
+          if (e.key === 'Enter' && typeof agregarOtroInstrumento === 'function') {
+            agregarOtroInstrumento();
+          }
+        });
+      }
+      
+      // Configurar cambio de pestañas para cargar registros
+      const recordsTab = document.getElementById('records-tab');
+      if (recordsTab) {
+        addSafeEventListener(recordsTab, 'click', function() {
+          cargarRegistrosLocales();
+        });
+      }
+      
+      console.log("Inicialización completa");
+    });
+
+    // Esta función corrige el problema del botón de cerrar sesión
+    function cerrarSesionManual() {
+      try {
+        console.log("Iniciando cierre de sesión manual...");
+        const token = obtenerTokenSesion();
+        console.log("Token encontrado:", token ? "Sí" : "No");
+        
+        if (!token) {
+          console.warn("No se encontró token de sesión");
+          window.location.href = window.location.pathname;
+          return;
+        }
+        
+        // Mostrar algún indicador de carga si lo deseas
+        mostrarAlerta("Cerrando sesión...", "info");
+        
+        google.script.run
+          .withSuccessHandler(function(result) {
+            console.log("Sesión cerrada correctamente");
+            // Redirigir a la página de login
+            window.location.href = window.location.pathname;
+          })
+          .withFailureHandler(function(error) {
+            console.error("Error al cerrar sesión:", error);
+            // Aún intentar redirigir
+            window.location.href = window.location.pathname;
+          })
+          .cerrarSesion(token);
+      } catch (e) {
+        console.error("Error en cerrarSesionManual:", e);
+        // Forzar redirección en caso de error
+        window.location.href = window.location.pathname;
+      }
+    }
+
+    // Asegúrate de tener esta función definida
+    function obtenerTokenSesion() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('token') || '';
+      } catch (e) {
+        console.error("Error al obtener token:", e);
+        return '';
+      }
+    }
+
+
+
+
+
+    // Función para agregar datos de interés personalizados
+    // Agregar o mejorar la función para agregar datos de interés
+    function agregarOtroDatoInteres() {
+      const input = document.getElementById('otrosDatosInteres');
+      const valor = input.value.trim();
+      
+      if (!valor) {
+        mostrarAlerta('Por favor ingrese un dato de interés', 'warning');
+        return;
+      }
+      
+      // Crear elemento en la lista
+      const lista = document.getElementById('otros-datos-interes-lista');
+      const div = document.createElement('div');
+      div.className = 'alert alert-info d-flex justify-content-between align-items-center mb-2 py-1 px-2';
+      div.innerHTML = `
+        <span class="otro-dato-interes">${valor}</span>
+        <button type="button" class="btn btn-sm btn-close" onclick="eliminarDatoInteres(this)"></button>
+      `;
+      
+      lista.appendChild(div);
+      
+      // Limpiar campo
+      input.value = '';
+      input.focus();
+      
+      // Actualizar el JSON oculto
+      actualizarDatosInteresDenunciadoJson();
+    }
+
+    // Función para eliminar dato de interés
+    function eliminarDatoInteres(button) {
+      button.parentElement.remove();
+      actualizarDatosInteresDenunciadoJson();
+    }
+
+    // Función mejorada para recopilar datos de interés del denunciado
+    function actualizarDatosInteresDenunciadoJson() {
+      const datos = [];
+      
+      // Agregar checkboxes marcados
+      document.querySelectorAll('.datos-interes-check:checked').forEach(function(checkbox) {
+        datos.push(checkbox.value);
+      });
+      
+      // Verificar si "Otros" está marcado
+      const otrosChecked = document.getElementById('datoInteres-otros').checked;
+      if (otrosChecked) {
+        // Agregar datos personalizados de la lista
+        document.querySelectorAll('#otros-datos-interes-lista .otro-dato-interes').forEach(function(span) {
+          datos.push(span.textContent);
+        });
+        
+        // También intentar agregar el texto actual (si existe) del campo otros
+        const otrosInput = document.getElementById('otrosDatosInteres');
+        if (otrosInput && otrosInput.value.trim()) {
+          datos.push(otrosInput.value.trim());
+        }
+      }
+      
+      // Actualizar campo oculto
+      const campoOculto = document.getElementById('datosInteresDenunciadoJson');
+      if (campoOculto) {
+        campoOculto.value = JSON.stringify(datos);
+        console.log("Datos de interés actualizados:", datos);
+      }
+    }
+
+    // Función para el PDF horizontal
+    function exportarSheetAPDF() {
+      mostrarCargando();
+      google.script.run
+        .withSuccessHandler(function(result) {
+          ocultarCargando();
+          if (result.success) {
+            descargarPDF(result, "Registros_Casos_Extorsion_Horizontal.pdf");
+          } else {
+            mostrarAlerta('Error al generar PDF: ' + result.message, 'danger');
+          }
+        })
+        .withFailureHandler(function(error) {
+          ocultarCargando();
+          mostrarAlerta('Error al exportar a PDF: ' + error, 'danger');
+        })
+        .exportarSheetAPDF();
+    }
+
+    // Función para exportar a Excel
+    function exportarExcel() {
+      // Mostrar spinner de carga
+      Swal.fire({
+        title: 'Exportando a Excel',
+        text: 'Generando archivo Excel, por favor espere...',
+        didOpen: () => {
+          Swal.showLoading();
+        },
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false
+      });
+      
+      // Llamar a la función del servidor
+      google.script.run
+        .withSuccessHandler(function(response) {
+          if (response.success) {
+            // Mostrar mensaje de éxito con enlace de descarga
+            Swal.fire({
+              title: '¡Éxito!',
+              html: `El archivo Excel ha sido creado correctamente.<br><br>
+                    <a href="${response.downloadUrl}" target="_blank" class="btn btn-success">
+                      <i class="fas fa-download"></i> Descargar Excel
+                    </a>`,
+              icon: 'success',
+              confirmButtonText: 'Cerrar'
+            });
+          } else {
+            // Mostrar mensaje de error
+            Swal.fire({
+              title: 'Error',
+              text: response.message || 'Error desconocido al exportar a Excel',
+              icon: 'error',
+              confirmButtonText: 'Cerrar'
+            });
+          }
+        })
+        .withFailureHandler(function(error) {
+          // Mostrar mensaje de error
+          Swal.fire({
+            title: 'Error',
+            text: 'Hubo un problema al exportar a Excel: ' + (error.message || error),
+            icon: 'error',
+            confirmButtonText: 'Cerrar'
+          });
+        })
+        .handleExportarExcel();
+    }
+
+    function onExcelSuccess(response) {
+      if (response.success) {
+        alert('Excel generado con éxito. Haz clic en OK para descargar.');
+        window.open(response.downloadUrl, '_blank');
+      } else {
+        alert('Error: ' + response.message);
+      }
+    }
+    
+    function onExcelError(error) {
+      alert('Error al generar Excel: ' + error);
+    }
+
+    
+    // Función auxiliar para descargar el PDF
+    function descargarPDF(result, nombreArchivo) {
+      if (result.url && result.url.startsWith('data:application/pdf;base64,')) {
+        const link = document.createElement('a');
+        link.href = result.url;
+        link.download = nombreArchivo;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        mostrarAlerta('PDF generado exitosamente. La descarga comenzará automáticamente.', 'success');
+      } else if (result.url) {
+        window.open(result.url, '_blank');
+        mostrarAlerta('PDF generado exitosamente', 'success');
+      } else {
+        mostrarAlerta('Error: No se pudo generar URL para el PDF', 'danger');
+      }
+    }
+
+
+
+    // Nueva estructura para agraviados
+    function inicializarAgraviados() {
+      // Configurar el botón para agregar agraviados
+      document.getElementById('btnAgregarAgraviado').addEventListener('click', agregarAgraviado);
+      
+      // Agregar el primer agraviado por defecto
+      agregarAgraviado();
+    }
+
+
+    // Agregar un nuevo agraviado
+    function agregarAgraviado() {
+      const container = document.getElementById('agraviados-container');
+      const id = 'agraviado-' + Date.now();
+      
+      const div = document.createElement('div');
+      div.className = 'agraviado-item card mb-3';
+      div.id = id;
+      div.innerHTML = `
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="card-title mb-0">Datos del Agraviado</h6>
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarAgraviado('${id}')">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <div class="row g-3">
+            <div class="col-md-12">
+              <label class="form-label">Nombre</label>
+              <input type="text" class="form-control agraviado-nombre" placeholder="Nombre completo del agraviado">
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Función</label>
+              <select class="form-select agraviado-funcion">
+                <option value="">Seleccionar...</option>
+                <option value="Pública">Función Pública</option>
+                <option value="Privada">Función Privada</option>
+              </select>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Tipo de Empresa</label>
+              <select class="form-select agraviado-tipo-empresa">
+                <option value="">Seleccionar...</option>
+                <option value="Pública">Empresa Pública</option>
+                <option value="Privada">Empresa Privada</option>
+              </select>
+            </div>
+            
+            <div class="col-md-12 agraviado-empresa-container" style="display: none;">
+              <label class="form-label">Nombre de la Empresa</label>
+              <input type="text" class="form-control agraviado-empresa" placeholder="Nombre de la empresa">
+            </div>
+          </div>
+        </div>
+      `;
+      
+      container.appendChild(div);
+      
+      // Configurar eventos para mostrar/ocultar el campo de empresa
+      const tipoEmpresaSelect = div.querySelector('.agraviado-tipo-empresa');
+      const empresaContainer = div.querySelector('.agraviado-empresa-container');
+      
+      tipoEmpresaSelect.addEventListener('change', function() {
+        empresaContainer.style.display = this.value ? 'block' : 'none';
+      });
+      
+      actualizarAgraviadosJson();
+    }
+
+    // Eliminar un agraviado
+    function eliminarAgraviado(id) {
+      const agraviado = document.getElementById(id);
+      if (agraviado) {
+        agraviado.remove();
+        actualizarAgraviadosJson();
+      }
+    }
+
+    // Actualizar el JSON de agraviados
+    function actualizarAgraviadosJson() {
+      const agraviados = [];
+      
+      document.querySelectorAll('.agraviado-item').forEach(function(item) {
+        const nombre = item.querySelector('.agraviado-nombre').value.trim();
+        const funcion = item.querySelector('.agraviado-funcion').value;
+        const tipoEmpresa = item.querySelector('.agraviado-tipo-empresa').value;
+        const empresa = item.querySelector('.agraviado-empresa').value.trim();
+        
+        if (nombre) {
+          agraviados.push({
+            id: item.id,
+            nombre: nombre,
+            funcion: funcion,
+            tipoEmpresa: tipoEmpresa,
+            empresa: empresa
+          });
+        }
+      });
+      
+      document.getElementById('agraviadosJson').value = JSON.stringify(agraviados);
+    }
+
+
+    ///-------------------------------------------------------------------------
+
+    // Función para inicializar la hoja de cálculo
+    function inicializarSheet() {
+      google.script.run
+        .withSuccessHandler(function(result) {
+          console.log('Hoja de cálculo inicializada:', result);
+        })
+        .withFailureHandler(function(error) {
+          console.error('Error al inicializar hoja:', error);
+        })
+        .inicializarSheet();
+    }
+    
+    // Función para mostrar el spinner de carga
+    function mostrarCargando() {
+      document.getElementById('loadingSpinner').classList.add('show');
+    }
+    
+    // Función para ocultar el spinner de carga
+    function ocultarCargando() {
+      document.getElementById('loadingSpinner').classList.remove('show');
+    }
+    
+    // Función mejorada para alerta
+    function mostrarAlerta(mensaje, tipo, autoclose = true) {
+      // Remover alertas anteriores
+      document.querySelectorAll('.alert-custom-temp').forEach(function(alerta) {
+        alerta.remove();
+      });
+      
+      const alertPlaceholder = document.createElement('div');
+      alertPlaceholder.className = `alert alert-${tipo} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-4 alert-custom-temp`;
+      alertPlaceholder.style.zIndex = '9999';
+      alertPlaceholder.style.maxWidth = '90%';
+      alertPlaceholder.style.width = '500px';
+      alertPlaceholder.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+      
+      alertPlaceholder.innerHTML = `
+        ${mensaje}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `;
+      
+      document.body.appendChild(alertPlaceholder);
+      
+      if (autoclose) {
+        setTimeout(() => {
+          if (alertPlaceholder.parentNode) {
+            alertPlaceholder.remove();
+          }
+        }, 5000);
+      }
+      
+      return alertPlaceholder;
+    }
+    
+    // Función para generar ID único
+    function generarId() {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    }
+    
+    function guardarFormulario(event) {
+      event.preventDefault();
+      
+      // Actualizar JSON de instrumentos antes de recopilar datos
+      actualizarInstrumentosJson();
+      
+      mostrarCargando();
+      
+      try {
+        const formData = recopilarDatosFormulario();
+        console.log('Datos a enviar:', formData);
+        
+        if (modoEdicion) {
+          // Actualizar registro existente
+          const index = registrosLocales.findIndex(r => r.id === formData.id);
+          if (index !== -1) {
+            registrosLocales[index] = formData;
+            guardarRegistrosLocales(); // Guardar en localStorage
+          }
+          
+          // También actualizar en servidor
+          google.script.run
+            .withSuccessHandler(function(result) {
+              ocultarCargando();
+              if (result.success) {
+                mostrarAlerta('Registro actualizado correctamente.', 'success');
+                limpiarFormulario();
+                modoEdicion = false;
+                document.getElementById('btnGuardar').innerHTML = '<i class="fas fa-save me-2"></i>Guardar Registro';
+                mostrarRegistrosEnTabla(registrosLocales);
+              } else {
+                mostrarAlerta('Error al actualizar: ' + result.message, 'danger');
+              }
+            })
+            .withFailureHandler(function(error) {
+              ocultarCargando();
+              mostrarAlerta('Error al actualizar: ' + error, 'danger');
+            })
+            .actualizarRegistroEnSheet(formData);
+        } else {
+          // Guardar nuevo registro
+          registrosLocales.push(formData); // Agregar a array local
+          guardarRegistrosLocales(); // Guardar en localStorage
+          
+          // También guardar en servidor
+          google.script.run
+            .withSuccessHandler(function(result) {
+              ocultarCargando();
+              if (result.success) {
+                mostrarAlerta('Registro guardado correctamente.', 'success');
+                limpiarFormulario();
+                mostrarRegistrosEnTabla(registrosLocales);
+              } else {
+                mostrarAlerta('Error al guardar: ' + result.message, 'danger');
+              }
+            })
+            .withFailureHandler(function(error) {
+              ocultarCargando();
+              mostrarAlerta('Error al guardar: ' + error, 'danger');
+            })
+            .guardarDatos(formData);
+        }
+      } catch (error) {
+        ocultarCargando();
+        mostrarAlerta('Error al procesar el formulario: ' + error, 'danger');
+        console.error('Error en guardarFormulario:', error);
+      }
+    }    
+
+    function recopilarDatosFormulario() {
+      try {
+        // Asegurarse de que todas las listas dinámicas estén actualizadas
+        actualizarInstrumentosJson();
+
+        // Capturar datos del formulario
+        const formData = {
+          id: document.getElementById('id')?.value || generarId(),
+          
+          // Información General
+          fiscalia: document.getElementById('fiscalia')?.value || '',
+          fiscalacargo: document.getElementById('fiscalacargo')?.value || '',
+          unidadInteligencia: document.getElementById('unidadInteligencia')?.value || '',
+          instructorCargo: document.getElementById('instructorCargo')?.value || '',
+          
+          // Detalles del Caso
+          formaInicio: document.getElementById('formaInicio')?.value || '',
+          carpetaFiscal: document.getElementById('carpetaFiscal')?.value || '',
+          fechaHecho: document.getElementById('fechaHecho')?.value || '',
+          fechaIngresoFiscal: document.getElementById('fechaIngresoFiscal')?.value || '',
+          fechadeingreso: document.getElementById('fechadeingreso')?.value || '',
+
+          // Información del Agraviado
+          tipoAgraviado: document.getElementById('tipoAgraviado')?.value || '',
+          agraviados: agraviados || [],
+          
+          // IMPORTANTE: Campos problemáticos que mencionaste
+          funcionAgraviado: document.getElementById('funcionAgraviado')?.value || '',
+          
+          // Manejar tipoEmpresa y nombreEmpresa
+          tipoEmpresa: document.getElementById('tipoEmpresa')?.value || '',
+          nombreEmpresa: document.getElementById('nombreEmpresa')?.value || '',
+          
+          // Asegurarse de guardar el array completo de empresas
+          empresas: empresas || [],
+          
+          // Información del Denunciado
+          delitos: document.getElementById('delitos')?.value || '',
+          lugarHechos: document.getElementById('lugarHechos')?.value || '',
+          denunciadosAlias: denunciados || [],
+
+          // Guardar cuentaPago y cuentasPago
+          cuentaPago: document.getElementById('cuentaPago')?.value || '',
+          cuentasPago: cuentasPago || [],
+          
+          // Datos de interés del denunciado
+          datosInteresDenunciado: (() => {
+            try {
+              // Primero intentar obtener del campo JSON
+              const datosJsonField = document.getElementById('datosInteresDenunciadoJson');
+              if (datosJsonField && datosJsonField.value) {
+                const datos = JSON.parse(datosJsonField.value);
+                console.log("Datos de interés procesados desde JSON:", datos);
+                return datos;
+              }
+              
+              // Si no hay JSON, recopilar desde checkboxes
+              const datos = [];
+              
+              if (document.getElementById('datoInteres-tatuajes')?.checked) {
+                datos.push('Tatuajes');
+              }
+              
+              if (document.getElementById('datoInteres-cicatrices')?.checked) {
+                datos.push('Cicatrices');
+              }
+              
+              // Otros datos personalizados
+              if (document.getElementById('datoInteres-otros')?.checked) {
+                document.querySelectorAll('#otros-datos-interes-lista .otro-dato-interes').forEach(span => {
+                  datos.push(span.textContent);
+                });
+                
+                // También agregar texto actual si existe
+                const otrosInput = document.getElementById('otrosDatosInteres');
+                if (otrosInput && otrosInput.value.trim()) {
+                  datos.push(otrosInput.value.trim());
+                }
+              }
+              
+              console.log("Datos de interés recopilados de la interfaz:", datos);
+              return datos;
+            } catch (e) {
+              console.error("Error al procesar datos de interés:", e);
+              return [];
+            }
+          })(),
+          
+          // Nombre/Apodo de Bandas Criminales
+          nombreBandaCriminal: document.getElementById('nombreBandaCriminal')?.value || '',
+          // IMPORTANTE: Guardar el array completo de bandas
+          bandasCriminales: bandasCriminales || [],
+          
+          cantidadMiembrosBanda: document.getElementById('cantidadMiembrosBanda')?.value || '',
+          modalidadViolencia: document.getElementById('modalidadViolencia')?.value || '',
+          modalidadAmenaza: document.getElementById('modalidadAmenaza')?.value || '',
+          atentadosCometidos: document.getElementById('atentadosCometidos')?.value || '',
+          
+          // Instrumentos y Métodos de Extorsión - IMPORTANTE
+          instrumentosExtorsion: (() => {
+            try {
+              // Intentar primero leer del campo JSON
+              const instrumentosJson = document.getElementById('instrumentosJson')?.value;
+              if (instrumentosJson) {
+                return JSON.parse(instrumentosJson);
+              }
+              
+              // Si no hay JSON, recopilar directamente
+              const instrumentos = [];
+              
+              // Agregar checkboxes marcados
+              if (document.getElementById('instrumento-motos')?.checked) {
+                instrumentos.push('Motos');
+              }
+              
+              if (document.getElementById('instrumento-carros')?.checked) {
+                instrumentos.push('Carros');
+              }
+              
+              // Otros instrumentos
+              if (document.getElementById('instrumento-otro')?.checked) {
+                // Agregar desde la lista
+                document.querySelectorAll('#otros-instrumentos-lista .otro-instrumento').forEach(span => {
+                  instrumentos.push(span.textContent);
+                });
+                
+                // También agregar el texto actual si existe
+                const otroInput = document.getElementById('instrumento-otro-texto');
+                if (otroInput && otroInput.value.trim()) {
+                  instrumentos.push(otroInput.value.trim());
+                }
+              }
+              
+              console.log("Instrumentos recopilados de la interfaz:", instrumentos);
+              return instrumentos;
+            } catch (e) {
+              console.error("Error al procesar instrumentos:", e);
+              return [];
+            }
+          })(),
+
+          // Forma de pago
+          formaPago: (() => {
+            const valor = document.getElementById('formaPago')?.value || '';
+            if (valor === 'Otro') {
+              return document.getElementById('otraFormaPago')?.value || 'Otro';
+            } else if (valor.startsWith('Custom:')) {
+              return valor.substring(7); // Quitar el prefijo "Custom:"
+            }
+            return valor;
+          })(),
+          
+          // Listas dinámicas - asegurarse de guardar los arrays completos
+          numerosTelefonicos: numerosTelefonicos || [],
+          imeisTelefonicos: imeisTelefonicos || [],
+          titularesPago: titularesPago || [],
+          
+          // Datos de Interés de Pagos
+          tipoPago: (() => {
+            const valor = document.getElementById('tipoPago')?.value || '';
+            if (valor === 'Otro') {
+              return document.getElementById('tipoPagoOtros')?.value || 'Otro';
+            } else if (valor.startsWith('Custom:')) {
+              return valor.substring(7); // Quitar el prefijo "Custom:"
+            }
+            return valor;
+          })(),
+
+          montoSolicitado: document.getElementById('montoSolicitado')?.value || '',
+          montoPagado: document.getElementById('montoPagado')?.value || '',
+          numeroPagos: document.getElementById('numeroPagos')?.value || '',
+          tipoPagoOtros: document.getElementById('tipoPagoOtros')?.value || '',
+          
+          // Sumilla y Observaciones
+          sumillaHechos: document.getElementById('sumillaHechos')?.value || '',
+          observaciones: document.getElementById('observaciones')?.value || '',
+          
+          // Añadir timestamp para seguimiento
+          timestampGuardado: new Date().toISOString()
+        };
+        
+        console.log("Datos recopilados del formulario:", formData);
+        return formData;
+      } catch (error) {
+        console.error("Error al recopilar datos del formulario:", error);
+        throw error;
+      }
+    }
+
+    // Función para recopilar datos de interés del denunciado
+    
+    
+    /*     function recopilarDatosInteresDenunciado() {
+      const datos = {
+        texto: document.getElementById('datosInteresDenunciado')?.value || '',
+        tatuajes: document.getElementById('datoInteres-tatuajes')?.checked || false,
+        cicatrices: document.getElementById('datoInteres-cicatrices')?.checked || false,
+        otros: document.getElementById('datoInteres-otros')?.checked || false,
+        otrosTexto: document.getElementById('otrosDatosInteres')?.value || ''
+      };
+      
+      return datos;
+    } */
+
+    // En recopilarDatosInteresDenunciado()
+    function recopilarDatosInteresDenunciado() {
+      // Recopilar datos de los checkboxes
+      const datos = [];
+      
+      if (document.getElementById('datoInteres-tatuajes').checked) {
+        datos.push('Tatuajes');
+      }
+      
+      if (document.getElementById('datoInteres-cicatrices').checked) {
+        datos.push('Cicatrices');
+      }
+      
+      // Otros datos
+      if (document.getElementById('datoInteres-otros').checked) {
+        const otrosTexto = document.getElementById('otrosDatosInteres').value.trim();
+        if (otrosTexto) {
+          datos.push('Otros: ' + otrosTexto);
+        }
+      }
+      
+      return datos.length > 0 ? datos.join(', ') : '';
+    }
+
+
+
+    // Función para recopilar información de agraviados con detalles
+    function recopilarAgraviados() {
+      const agraviadosConDetalles = [];
+      
+      // Recorrer todos los items de agraviados
+      document.querySelectorAll('.agraviado-item').forEach(function(item) {
+        const nombre = item.querySelector('.agraviado-nombre')?.value || '';
+        
+        if (nombre.trim()) {
+          agraviadosConDetalles.push({
+            id: item.id || generateId(),
+            nombre: nombre.trim(),
+            funcion: item.querySelector('.agraviado-funcion')?.value || '',
+            tipoEmpresa: item.querySelector('.agraviado-tipo-empresa')?.value || '',
+            empresa: item.querySelector('.agraviado-empresa')?.value || ''
+          });
+        }
+      });
+      
+      return agraviadosConDetalles.length > 0 ? agraviadosConDetalles : agraviados; // Fallback a agraviados originales
+    }
+
+    // Función para obtener bandas criminales
+    function obtenerBandasCriminales() {
+      const bandas = [];
+      
+      // Buscar todos los inputs de bandas (excluyendo el de agregar nueva)
+      document.querySelectorAll('.banda-item input').forEach(function(input) {
+        if (input.value.trim()) {
+          bandas.push(input.value.trim());
+        }
+      });
+      
+      // Si no hay bandas en el nuevo formato, intentar obtener del campo original
+      if (bandas.length === 0 && document.getElementById('nombreBandaCriminal')) {
+        const bandaOriginal = document.getElementById('nombreBandaCriminal').value.trim();
+        if (bandaOriginal) {
+          bandas.push(bandaOriginal);
+        }
+      }
+      
+      return bandas;
+    }
+
+    // Función para obtener cuentas de pago
+    function obtenerCuentasPago() {
+      const cuentas = [];
+      
+      // Buscar todos los inputs de cuentas (excluyendo el de agregar nueva)
+      document.querySelectorAll('.cuenta-item input').forEach(function(input) {
+        if (input.value.trim()) {
+          cuentas.push(input.value.trim());
+        }
+      });
+      
+      // Si no hay cuentas en el nuevo formato, intentar obtener del campo original
+      if (cuentas.length === 0 && document.getElementById('cuentaPago')) {
+        const cuentaOriginal = document.getElementById('cuentaPago').value.trim();
+        if (cuentaOriginal) {
+          cuentas.push(cuentaOriginal);
+        }
+      }
+      
+      return cuentas;
+    }
+
+
+    // Reemplazar la función agregarBanda actual con esta versión corregida:
+    function agregarBanda() {
+      try {
+        const bandasContainer = document.getElementById('bandas-container');
+        if (!bandasContainer) return;
+        
+        const inputBanda = bandasContainer.querySelector('.banda-input');
+        if (!inputBanda) return;
+        
+        const nombreBanda = inputBanda.value.trim();
+        if (!nombreBanda) {
+          alert("Por favor ingrese un nombre de banda");
+          return;
+        }
+        
+        // Agregar al array de bandasCriminales
+        if (!bandasCriminales) bandasCriminales = [];
+        bandasCriminales.push(nombreBanda);
+        
+        // Actualizar el campo JSON oculto
+        document.getElementById('bandasCriminalesJson').value = JSON.stringify(bandasCriminales);
+        
+        // Crear nuevo elemento
+        const nuevaBanda = document.createElement('div');
+        nuevaBanda.className = 'banda-item mb-2 d-flex align-items-center';
+        nuevaBanda.innerHTML = `
+          <input type="text" class="form-control me-2" value="${nombreBanda}" readonly>
+          <button type="button" class="btn btn-outline-danger btn-sm" onclick="eliminarBanda(this, '${nombreBanda}')">
+            <i class="fas fa-times"></i>
+          </button>
+        `;
+        
+        // Insertar antes del campo de entrada
+        bandasContainer.insertBefore(nuevaBanda, inputBanda.parentNode);
+        
+        // Limpiar campo
+        inputBanda.value = '';
+        
+        console.log("Bandas criminales actualizadas:", bandasCriminales);
+      } catch (error) {
+        console.error("Error en agregarBanda:", error);
+      }
+    }
+
+    // Agregar función para eliminar banda
+    function eliminarBanda(button, nombreBanda) {
+      try {
+        // Eliminar del DOM
+        button.parentNode.remove();
+        
+        // Eliminar del array
+        if (bandasCriminales && bandasCriminales.includes(nombreBanda)) {
+          bandasCriminales = bandasCriminales.filter(banda => banda !== nombreBanda);
+          document.getElementById('bandasCriminalesJson').value = JSON.stringify(bandasCriminales);
+          console.log("Banda eliminada, quedan:", bandasCriminales);
+        }
+      } catch (error) {
+        console.error("Error al eliminar banda:", error);
+      }
+    }
+
+    // Función para actualizar el valor oculto de bandas criminales
+    function actualizarBandasCriminales() {
+      try {
+        const bandas = [];
+        document.querySelectorAll('.banda-item input').forEach(function(input) {
+          if (input.value.trim()) {
+            bandas.push(input.value.trim());
+          }
+        });
+        
+        // Si existe el campo oculto, actualizarlo
+        const bandasInput = document.getElementById('bandasCriminalesJson');
+        if (bandasInput) {
+          bandasInput.value = JSON.stringify(bandas);
+        }
+      } catch (error) {
+        console.error("Error al actualizar bandas criminales:", error);
+      }
+    }
+
+    // Cuentas de Pago
+    function agregarCuentaPago() {
+      cuentasPago.push('');
+      actualizarListaCuentas();
+    }
+
+    function actualizarListaCuentas() {
+      const container = document.getElementById('cuentas-pago-container');
+      container.innerHTML = '';
+        
+      cuentasPago.forEach(function(cuenta, index) {
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        div.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="flex-grow-1 me-2">
+              <input type="text" class="form-control cuenta-input" 
+                  placeholder="Número o cuenta para pago" 
+                  value="${cuenta}" 
+                  onchange="actualizarCuenta(${index}, this.value)">
+            </div>
+            <button type="button" class="btn btn-danger btn-sm" onclick="eliminarCuenta(${index})">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+        
+      document.getElementById('cuentasPagoJson').value = JSON.stringify(cuentasPago);
+    }
+
+    function actualizarCuenta(index, valor) {
+      if (index >= 0 && index < cuentasPago.length) {
+        cuentasPago[index] = valor;
+        document.getElementById('cuentasPagoJson').value = JSON.stringify(cuentasPago);
+      }
+    }
+
+    function eliminarCuenta(index) {
+      cuentasPago.splice(index, 1);
+      actualizarListaCuentas();
+    }
+    //----------------------------------------------------------
+
+
+    // Función para obtener instrumentos de extorsión
+    function obtenerInstrumentosExtorsion() {
+      const instrumentos = [];
+      
+      // Verificar checkboxes
+      if (document.getElementById('instrumento-motos')?.checked) {
+        instrumentos.push('Motos');
+      }
+      
+      if (document.getElementById('instrumento-carros')?.checked) {
+        instrumentos.push('Carros');
+      }
+      
+      // Si "Otros" está marcado, agregar los instrumentos personalizados
+      if (document.getElementById('instrumento-otro')?.checked) {
+        document.querySelectorAll('.otro-instrumento-input').forEach(function(input) {
+          if (input.value.trim()) {
+            instrumentos.push(input.value.trim());
+          }
+        });
+      }
+      
+      return instrumentos;
+    }
+
+    // Función para obtener forma de pago
+    function obtenerFormaPago() {
+      const formaPago = document.getElementById('formaPago')?.value;
+      
+      if (formaPago === 'Otro') {
+        return document.getElementById('otraFormaPago')?.value || 'Otro';
+      }
+      
+      return formaPago || '';
+    }
+
+    
+    // Función para recopilar instrumentos de extorsión
+  
+    // Función para recopilar instrumentos de extorsión
+    function recopilarInstrumentosExtorsion() {
+      const instrumentos = [];
+      
+      // Verificar checkboxes estándar
+      if (document.getElementById('instrumento-motos').checked) {
+        instrumentos.push('Motos');
+      }
+      
+      if (document.getElementById('instrumento-carros').checked) {
+        instrumentos.push('Carros');
+      }
+      
+      // Verificar "Otro" checkbox
+      if (document.getElementById('instrumento-otro').checked) {
+        // Agregar el valor del campo de texto
+        const otroTexto = document.getElementById('instrumento-otro-texto').value.trim();
+        if (otroTexto) {
+          instrumentos.push(otroTexto);
+        }
+        
+        // Agregar otros instrumentos de la lista
+        document.querySelectorAll('#otros-instrumentos-lista .otro-instrumento').forEach(function(item) {
+          instrumentos.push(item.textContent.trim());
+        });
+      }
+      
+      return instrumentos;
+    }
+
+    function agregarOtroInstrumento() {
+      try {
+        const input = document.getElementById('instrumento-otro-texto');
+        const valor = input.value.trim();
+        
+        if (!valor) {
+          mostrarAlerta('Por favor ingrese un instrumento', 'warning');
+          return;
+        }
+        
+        // Crear elemento en la lista
+        const lista = document.getElementById('otros-instrumentos-lista');
+        if (!lista) {
+          console.error("No se encontró el elemento 'otros-instrumentos-lista'");
+          return;
+        }
+        
+        const div = document.createElement('div');
+        div.className = 'alert alert-info d-flex justify-content-between align-items-center mb-2 py-1 px-2';
+        div.innerHTML = `
+          <span class="otro-instrumento">${valor}</span>
+          <button type="button" class="btn btn-sm btn-close" onclick="eliminarInstrumento(this)"></button>
+        `;
+        
+        lista.appendChild(div);
+        
+        // Limpiar campo
+        input.value = '';
+        input.focus();
+        
+        // Actualizar el JSON oculto
+        actualizarInstrumentosJson();
+      } catch(e) {
+        console.error("Error en agregarOtroInstrumento:", e);
+        mostrarAlerta('Error al agregar instrumento: ' + e.message, 'danger');
+      }
+    }
+
+    // Función para eliminar instrumento
+    function eliminarInstrumento(button) {
+      button.parentElement.remove();
+      actualizarInstrumentosJson();
+    }
+
+
+    /*     // Función para actualizar el JSON de instrumentos
+    function actualizarInstrumentosJson() {
+      const instrumentos = [];
+      
+      // Agregar checkboxes marcados
+      document.querySelectorAll('.instrumento-check:checked').forEach(function(checkbox) {
+        instrumentos.push(checkbox.value);
+      });
+      
+      // Agregar instrumentos personalizados
+      document.querySelectorAll('#otros-instrumentos-lista .otro-instrumento').forEach(function(span) {
+        instrumentos.push(span.textContent);
+      });
+      
+      // Actualizar campo oculto
+      const campoOculto = document.getElementById('instrumentosJson');
+      if (campoOculto) {
+        campoOculto.value = JSON.stringify(instrumentos);
+      }
+    } */
+
+
+/*     // Función para actualizar el JSON de instrumentos
+    function actualizarInstrumentosJson() {
+      try {
+        const instrumentos = [];
+        
+        // 1. Agregar checkboxes estándar marcados (Motos y Carros)
+        document.querySelectorAll('.instrumento-check:checked').forEach(function(checkbox) {
+          instrumentos.push(checkbox.value);
+          console.log("Agregando instrumento checkbox:", checkbox.value);
+        });
+        
+        // 2. Verificar si "Otro" está marcado
+        const otroCheck = document.getElementById('instrumento-otro');
+        if (otroCheck && otroCheck.checked) {
+          // 3. Agregar instrumentos personalizados de la lista
+          const listaItems = document.querySelectorAll('#otros-instrumentos-lista .otro-instrumento');
+          if (listaItems && listaItems.length > 0) {
+            listaItems.forEach(function(span) {
+              instrumentos.push(span.textContent);
+              console.log("Agregando instrumento personalizado:", span.textContent);
+            });
+          }
+          
+          // 4. Si no hay elementos en la lista pero hay texto en el campo, considerar agregarlo también
+          const otroInput = document.getElementById('instrumento-otro-texto');
+          if (otroInput && otroInput.value.trim() && listaItems.length === 0) {
+            // Solo lo agregamos si no hay elementos en la lista para evitar duplicados
+            instrumentos.push(otroInput.value.trim());
+            console.log("Agregando instrumento del input:", otroInput.value.trim());
+          }
+        }
+        
+        // 5. Actualizar campo oculto
+        const campoOculto = document.getElementById('instrumentosJson');
+        if (campoOculto) {
+          campoOculto.value = JSON.stringify(instrumentos);
+          console.log("Instrumentos actualizados:", instrumentos);
+        } else {
+          console.error("No se encontró el campo oculto 'instrumentosJson'");
+        }
+      } catch(e) {
+        console.error("Error en actualizarInstrumentosJson:", e);
+      }
+    } */
+    function actualizarInstrumentosJson() {
+      try {
+        const instrumentos = [];
+        
+        // Agregar checkboxes estándar marcados
+        document.querySelectorAll('.instrumento-check:checked').forEach(function(checkbox) {
+          instrumentos.push(checkbox.value);
+          console.log("Agregando instrumento checkbox:", checkbox.value);
+        });
+        
+        // Verificar si "Otro" está marcado
+        const otroCheck = document.getElementById('instrumento-otro');
+        if (otroCheck && otroCheck.checked) {
+          // Agregar instrumentos personalizados de la lista
+          document.querySelectorAll('#otros-instrumentos-lista .otro-instrumento').forEach(function(span) {
+            instrumentos.push(span.textContent);
+            console.log("Agregando instrumento personalizado:", span.textContent);
+          });
+          
+          // Si hay texto en el campo pero no está en la lista, añadirlo también
+          const otroInput = document.getElementById('instrumento-otro-texto');
+          if (otroInput && otroInput.value.trim()) {
+            instrumentos.push(otroInput.value.trim());
+            console.log("Agregando instrumento del input:", otroInput.value.trim());
+          }
+        }
+        
+        // Actualizar campo oculto
+        const campoOculto = document.getElementById('instrumentosJson');
+        if (campoOculto) {
+          campoOculto.value = JSON.stringify(instrumentos);
+          console.log("Instrumentos JSON actualizado:", instrumentos);
+        } else {
+          console.error("No se encontró el campo oculto 'instrumentosJson'");
+        }
+      } catch(e) {
+        console.error("Error en actualizarInstrumentosJson:", e);
+      }
+    }
+
+
+    // Función para mostrar modal de especificación
+    function mostrarModalOtros(campo) {
+      const input = document.getElementById('otrosFormaInicio');
+      if (input && campo === 'formaInicio') {
+        const container = document.getElementById('otrosFormaInicioContainer');
+        if (container) {
+          container.style.display = 'block';
+          input.focus();
+        }
+      }
+    }
+    
+    // Modificar la función limpiarFormulario para que limpie correctamente estos campos
+    function limpiarFormulario() {
+      document.getElementById('casoForm').reset();
+      document.getElementById('id').value = '';
+      document.getElementById('modoEdicion').value = 'false';
+      modoEdicion = false;
+      
+      // Limpiar elementos dinámicos
+      agraviados = [];
+      actualizarListaAgraviados();
+      
+      denunciados = [];
+      actualizarListaDenunciados();
+      
+      numerosTelefonicos = [];
+      actualizarListaNumeros();
+      
+      imeisTelefonicos = [];
+      actualizarListaImeis();
+      
+      titularesPago = [];
+      actualizarListaTitulares();
+
+      cuentasPago = [];
+      actualizarListaCuentas();
+
+      // Limpiar bandasCriminales
+      bandasCriminales = [];
+      document.getElementById('bandasCriminalesJson').value = '[]';
+      document.querySelectorAll('.banda-item').forEach(item => item.remove());
+      const inputBanda = document.querySelector('.banda-input');
+      if (inputBanda) inputBanda.value = '';
+
+      // Limpiar empresas
+      empresas = [];
+      document.getElementById('empresasJson').value = '[]';
+      // Limpiar la visualización de las empresas
+      const listaEmpresas = document.getElementById('lista-empresas');
+      if (listaEmpresas) {
+        listaEmpresas.innerHTML = '';
+      }
+      // Limpiar los campos de entrada de empresa
+      const tipoEmpresaSelect = document.querySelector('#empresas-container .empresa-tipo');
+      const nombreEmpresaInput = document.querySelector('#empresas-container .empresa-nombre');
+      if (tipoEmpresaSelect) tipoEmpresaSelect.selectedIndex = 0;
+      if (nombreEmpresaInput) nombreEmpresaInput.value = '';
+      
+      // Ocultar campos adicionales
+      document.getElementById('tipoPagoOtroContainer').style.display = 'none';
+      
+      // Limpiar instrumentos
+      document.querySelectorAll('.instrumento-check').forEach(checkbox => {
+        checkbox.checked = false;
+      });
+      document.getElementById('instrumento-otro').checked = false;
+      
+      // Ocultar y limpiar contenedor de otros instrumentos
+      const otrosInstrumentosContainer = document.getElementById('instrumento-otro-container');
+      if (otrosInstrumentosContainer) {
+        otrosInstrumentosContainer.style.display = 'none';
+      }
+      
+      // Limpiar lista de otros instrumentos
+      const otrosInstrumentosLista = document.getElementById('otros-instrumentos-lista');
+      if (otrosInstrumentosLista) {
+        otrosInstrumentosLista.innerHTML = '';
+      }
+      
+      // Limpiar input de otro instrumento
+      const otroInstrumentoInput = document.getElementById('instrumento-otro-texto');
+      if (otroInstrumentoInput) {
+        otroInstrumentoInput.value = '';
+      }
+      
+      // Actualizar los JSON ocultos para asegurarse de que estén vacíos
+      document.getElementById('instrumentosJson').value = '[]';
+      document.getElementById('datosInteresDenunciadoJson').value = '[]';
+      
+      // Cambiar texto del botón
+      document.getElementById('btnGuardar').innerHTML = '<i class="fas fa-save me-2"></i>Guardar Registro';
+    }
+    
+    // Funciones para manejar elementos dinámicos
+    
+    // Agraviados
+    function agregarAgraviado() {
+      const nuevoAgraviado = {
+        id: generarId(),
+        nombre: ''
+      };
+      
+      agraviados.push(nuevoAgraviado);
+      actualizarListaAgraviados();
+    }
+    
+    function actualizarListaAgraviados() {
+      const container = document.getElementById('agraviados-container');
+      container.innerHTML = '';
+      
+      agraviados.forEach(function(agraviado, index) {
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        div.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="flex-grow-1 me-2">
+              <input type="text" class="form-control agraviado-input" 
+                  placeholder="Nombre del agraviado" 
+                  value="${agraviado.nombre}" 
+                  data-id="${agraviado.id}"
+                  onchange="actualizarAgraviado('${agraviado.id}', this.value)">
+            </div>
+            <button type="button" class="btn btn-danger btn-sm" onclick="eliminarAgraviado('${agraviado.id}')">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+      
+      document.getElementById('agraviadosJson').value = JSON.stringify(agraviados);
+    }
+    
+    function actualizarAgraviado(id, nombre) {
+      const index = agraviados.findIndex(a => a.id === id);
+        if (index !== -1) {
+          agraviados[index].nombre = nombre;
+          document.getElementById('agraviadosJson').value = JSON.stringify(agraviados);
+       }
+    }
+      
+    function eliminarAgraviado(id) {
+      agraviados = agraviados.filter(a => a.id !== id);
+      actualizarListaAgraviados();
+    }
+      
+    // Denunciados
+    function agregarDenunciado() {
+      const nuevoDenunciado = {
+        id: generarId(),
+        nombre: ''
+      };
+        
+      denunciados.push(nuevoDenunciado);
+      actualizarListaDenunciados();
+    }
+      
+    function actualizarListaDenunciados() {
+      const container = document.getElementById('denunciados-container');
+       container.innerHTML = '';
+        
+      denunciados.forEach(function(denunciado, index) {
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        div.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="flex-grow-1 me-2">
+              <input type="text" class="form-control denunciado-input" 
+                  placeholder="Nombre o alias del denunciado" 
+                  value="${denunciado.nombre}" 
+                  data-id="${denunciado.id}"
+                  onchange="actualizarDenunciado('${denunciado.id}', this.value)">
+            </div>
+            <button type="button" class="btn btn-danger btn-sm" onclick="eliminarDenunciado('${denunciado.id}')">
+              <i class="fas fa-times"></i>
+            /button>
+          </div>
+          `;
+          container.appendChild(div);
+        });
+        
+        document.getElementById('denunciadosJson').value = JSON.stringify(denunciados);
+      }
+      
+    function actualizarDenunciado(id, nombre) {
+      const index = denunciados.findIndex(d => d.id === id);
+      if (index !== -1) {
+        denunciados[index].nombre = nombre;
+        document.getElementById('denunciadosJson').value = JSON.stringify(denunciados);
+      }
+    }
+      
+    function eliminarDenunciado(id) {
+      denunciados = denunciados.filter(d => d.id !== id);
+      actualizarListaDenunciados();
+    }
+    
+      
+    // Números Telefónicos
+    function agregarNumeroTelefonico() {
+      numerosTelefonicos.push('');
+      actualizarListaNumeros();
+    }
+      
+    function actualizarListaNumeros() {
+      const container = document.getElementById('numeros-container');
+      container.innerHTML = '';
+        
+      numerosTelefonicos.forEach(function(numero, index) {
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        div.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="flex-grow-1 me-2">
+              <input type="text" class="form-control numero-input" 
+                  placeholder="Número telefónico" 
+                  value="${numero}" 
+                  onchange="actualizarNumero(${index}, this.value)">
+            </div>
+            <button type="button" class="btn btn-danger btn-sm" onclick="eliminarNumero(${index})">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        `;
+          container.appendChild(div);
+      });
+        
+      document.getElementById('numerosTelefonicosJson').value = JSON.stringify(numerosTelefonicos);
+    }
+      
+    function actualizarNumero(index, valor) {
+      if (index >= 0 && index < numerosTelefonicos.length) {
+        numerosTelefonicos[index] = valor;
+        document.getElementById('numerosTelefonicosJson').value = JSON.stringify(numerosTelefonicos);
+      }
+    }
+      
+    function eliminarNumero(index) {
+      numerosTelefonicos.splice(index, 1);
+      actualizarListaNumeros();
+    }
+      
+    // IMEI Telefónicos
+    function agregarImeiTelefonico() {
+      imeisTelefonicos.push('');
+      actualizarListaImeis();
+    }
+      
+    function actualizarListaImeis() {
+      const container = document.getElementById('imeis-container');
+      container.innerHTML = '';
+        
+      imeisTelefonicos.forEach(function(imei, index) {
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        div.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="flex-grow-1 me-2">
+              <input type="text" class="form-control imei-input" 
+                  placeholder="IMEI del teléfono" 
+                  value="${imei}" 
+                  onchange="actualizarImei(${index}, this.value)">
+            </div>
+            <button type="button" class="btn btn-danger btn-sm" onclick="eliminarImei(${index})">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+        
+      document.getElementById('imeisTelefonicosJson').value = JSON.stringify(imeisTelefonicos);
+    }
+      
+    function actualizarImei(index, valor) {
+      if (index >= 0 && index < imeisTelefonicos.length) {
+        imeisTelefonicos[index] = valor;
+        document.getElementById('imeisTelefonicosJson').value = JSON.stringify(imeisTelefonicos);
+      }
+    }
+      
+    function eliminarImei(index) {
+      imeisTelefonicos.splice(index, 1);
+       actualizarListaImeis();
+    }
+      
+    // Titulares de Pago
+    function agregarTitularPago() {
+      titularesPago.push('');
+      actualizarListaTitulares();
+    }
+      
+    function actualizarListaTitulares() {
+      const container = document.getElementById('titulares-container');
+      container.innerHTML = '';
+        
+      titularesPago.forEach(function(titular, index) {
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        div.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="flex-grow-1 me-2">
+              <input type="text" class="form-control titular-input" 
+                  placeholder="Nombre del titular" 
+                  value="${titular}" 
+                  onchange="actualizarTitular(${index}, this.value)">
+            </div>
+            <button type="button" class="btn btn-danger btn-sm" onclick="eliminarTitular(${index})">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+        
+      document.getElementById('titularesPagoJson').value = JSON.stringify(titularesPago);
+    }
+      
+    function actualizarTitular(index, valor) {
+      if (index >= 0 && index < titularesPago.length) {
+        titularesPago[index] = valor;
+        document.getElementById('titularesPagoJson').value = JSON.stringify(titularesPago);
+      }
+    }
+      
+    function eliminarTitular(index) {
+      titularesPago.splice(index, 1);
+      actualizarListaTitulares();
+    }
+
+    // Guardar registros en localStorage
+    function guardarRegistrosLocales() {
+      try {
+        // Agregar timestamp para depuración
+        const dataToSave = {
+          timestamp: new Date().toISOString(),
+          registros: registrosLocales
+        };
+        
+        localStorage.setItem('registrosBandasCriminales', JSON.stringify(dataToSave));
+        console.log(`Guardados ${registrosLocales.length} registros en localStorage`);
+      } catch (e) {
+        console.error("Error al guardar en localStorage:", e);
+      }
+    }
+
+    // Cargar registros desde localStorage
+    function cargarRegistrosLocales() {
+      try {
+        const savedData = localStorage.getItem('registrosBandasCriminales');
+        if (savedData) {
+          const parsed = JSON.parse(savedData);
+          
+          // Verificar si los datos tienen el formato correcto
+          if (parsed.registros && Array.isArray(parsed.registros)) {
+            registrosLocales = parsed.registros;
+            console.log(`Cargados ${registrosLocales.length} registros desde localStorage (guardados el ${new Date(parsed.timestamp).toLocaleString()})`);
+          } else if (Array.isArray(parsed)) {
+            // Formato antiguo (solo array)
+            registrosLocales = parsed;
+            console.log(`Cargados ${registrosLocales.length} registros desde localStorage (formato antiguo)`);
+          } else {
+            console.warn("Formato inesperado en localStorage:", parsed);
+            registrosLocales = [];
+          }
+        } else {
+          console.log("No hay datos en localStorage");
+          registrosLocales = [];
+        }
+        
+        // Mostrar los registros en la tabla
+        mostrarRegistrosEnTabla(registrosLocales);
+        
+        return registrosLocales;
+      } catch (e) {
+        console.error("Error al cargar desde localStorage:", e);
+        registrosLocales = [];
+        return [];
+      }
+    }
+
+
+
+    /*     //nuevo------------------------ SE PUEDE BORRAR
+    function diagnosticarRegistros() {
+      try {
+        var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+        var sheet = ss.getSheetByName("Hoja 1") || ss.getActiveSheet();
+        var data = sheet.getDataRange().getValues();
+        
+        Logger.log("Total de filas: " + data.length);
+        
+        // Si hay al menos encabezados y una fila de datos
+        if (data.length > 1) {
+          Logger.log("Primera fila (encabezados): " + JSON.stringify(data[0]));
+          Logger.log("Segunda fila (primer registro): " + JSON.stringify(data[1]));
+        }
+        
+        // Ahora, veamos qué devuelve obtenerRegistros
+        var registros = obtenerRegistros();
+        Logger.log("Registros obtenidos: " + registros.length);
+        
+        if (registros.length > 0) {
+          Logger.log("Primer registro: " + JSON.stringify(registros[0]));
+        }
+        
+        return {
+          filas: data.length,
+          registrosObtenidos: registros.length
+        };
+      } catch (error) {
+        return {
+          error: error.toString()
+        };
+      }
+    } */
+    //-------------------
+    // Función para agregar empresa
+    function agregarEmpresa() {
+      const tipoSelect = document.querySelector('#empresas-container .empresa-tipo');
+      const nombreInput = document.querySelector('#empresas-container .empresa-nombre');
+      
+      const tipo = tipoSelect.value;
+      const nombre = nombreInput.value.trim();
+      
+      if (!tipo) {
+        alert("Por favor seleccione un tipo de empresa");
+        return;
+      }
+      
+      if (!nombre) {
+        alert("Por favor ingrese el nombre de la empresa");
+        return;
+      }
+      
+      // Agregar al array
+      const nuevaEmpresa = {
+        id: generarId(),
+        tipo: tipo,
+        nombre: nombre
+      };
+      
+      empresas.push(nuevaEmpresa);
+      
+      // Actualizar el JSON
+      document.getElementById('empresasJson').value = JSON.stringify(empresas);
+      
+      // Mostrar en la lista
+      mostrarEmpresas();
+      
+      // Limpiar campos
+      nombreInput.value = '';
+      tipoSelect.selectedIndex = 0;
+    }
+
+    // Función para mostrar las empresas agregadas
+    function mostrarEmpresas() {
+      const listaContainer = document.getElementById('lista-empresas');
+      listaContainer.innerHTML = '';
+      
+      empresas.forEach(function(empresa) {
+        const div = document.createElement('div');
+        div.className = 'alert alert-info d-flex justify-content-between align-items-center mb-2 py-1 px-2';
+        div.innerHTML = `
+          <span>${empresa.tipo} (${empresa.nombre})</span>
+          <button type="button" class="btn btn-sm btn-close" onclick="eliminarEmpresa('${empresa.id}')"></button>
+        `;
+        
+        listaContainer.appendChild(div);
+      });
+    }
+
+    // Función para eliminar una empresa
+    function eliminarEmpresa(id) {
+      empresas = empresas.filter(e => e.id !== id);
+      document.getElementById('empresasJson').value = JSON.stringify(empresas);
+      mostrarEmpresas();
+    }
+
+
+    function mostrarRegistrosEnTabla(datos) {
+      const tbody = document.getElementById('registros-body');
+      const noRegistrosMessage = document.getElementById('no-registros-message');
+      
+      // Limpiar tabla
+      tbody.innerHTML = '';
+      
+      // Verificar datos
+      if (!datos || !Array.isArray(datos) || datos.length === 0) {
+        console.log("No hay datos para mostrar");
+        if (noRegistrosMessage) {
+          noRegistrosMessage.style.display = 'block';
+        }
+        return;
+      }
+      
+      if (noRegistrosMessage) {
+        noRegistrosMessage.style.display = 'none';
+      }
+      
+      // Mostrar cada registro
+      datos.forEach(function(registro, index) {
+        if (!registro) return; // Saltar registros nulos o undefined
+        
+        // Depuración - muestra el registro completo en consola
+        console.log(`Registro #${index}:`, registro);
+        
+        const row = document.createElement('tr');
+        
+        // Obtener valores con comprobación de nulos
+        const carpetaFiscal = registro.carpetaFiscal || registro.caso || 'N/A';
+        const fiscalACargo = registro.fiscalacargo || 'N/A';
+        
+        // Formatear fecha de manera más robusta
+        let fechaIngreso = 'N/A';
+        if (registro.fechaIngresoFiscal) {
+          fechaIngreso = formatearFecha(registro.fechaIngresoFiscal);
+        } else if (registro.fechadeingreso) {
+          fechaIngreso = formatearFecha(registro.fechadeingreso);
+        } else if (registro.fechaRegistro) {
+          fechaIngreso = formatearFecha(registro.fechaRegistro);
+        }
+        
+        // Formatear agraviados de manera más robusta
+        let agraviadosTexto = obtenerTextoDeCampo(registro, ['agraviados', 'agraviadosTexto', 'nombreAgraviado']);
+        
+        // Usar iconos para las acciones
+        const botonesAcciones = `
+          <button type="button" class="btn btn-sm btn-info" onclick="verDetalle(${index})">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button type="button" class="btn btn-sm btn-primary" onclick="editarRegistro(${index})">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button type="button" class="btn btn-sm btn-danger" onclick="confirmarEliminar(${index})">
+            <i class="fas fa-trash"></i>
+          </button>
+        `;
+        
+        row.innerHTML = `
+          <td>${carpetaFiscal}</td>
+          <td>${fiscalACargo}</td>
+          <td>${fechaIngreso}</td>
+          <td>${agraviadosTexto}</td>
+          <td><span class="badge bg-success">Guardado</span></td>
+          <td>${botonesAcciones}</td>
+        `;
+        
+        tbody.appendChild(row);
+      });
+    }
+
+    // Función auxiliar para formatear fechas de manera más robusta
+    function formatearFecha(fecha) {
+      if (!fecha) return 'N/A';
+      
+      try {
+        // Si es un objeto Date
+        if (fecha instanceof Date) {
+          return fecha.toLocaleDateString();
+        }
+        
+        // Si es una cadena ISO o similar
+        if (typeof fecha === 'string') {
+          // Manejar diferentes formatos
+          if (fecha.includes('T') || fecha.includes('-')) {
+            return new Date(fecha).toLocaleDateString();
+          }
+          
+          // Si es formato dd/mm/yyyy
+          if (fecha.includes('/')) {
+            return fecha;
+          }
+        }
+        
+        // Como último recurso
+        return fecha.toString();
+      } catch (e) {
+        console.warn("Error al formatear fecha:", fecha, e);
+        return fecha.toString();
+      }
+    }
+
+    // Función auxiliar para extraer texto de diferentes posibles campos
+    function obtenerTextoDeCampo(objeto, posiblesCampos) {
+      if (!objeto) return 'N/A';
+      
+      for (const campo of posiblesCampos) {
+        const valor = objeto[campo];
+        
+        if (valor) {
+          // Si es un array de objetos con propiedad 'nombre'
+          if (Array.isArray(valor) && valor.length > 0) {
+            if (typeof valor[0] === 'object') {
+              return valor.map(item => item.nombre || item.toString()).join(', ');
+            } else {
+              return valor.join(', ');
+            }
+          }
+          
+          // Si es una cadena
+          if (typeof valor === 'string') {
+            return valor;
+          }
+          
+          // Si es un objeto con propiedad 'nombre'
+          if (typeof valor === 'object' && valor !== null && valor.nombre) {
+            return valor.nombre;
+          }
+        }
+      }
+      
+      return 'N/A';
+    }
+
+
+
+    //---------------------------------------------------
+    
+    function verDetalle(index) {
+      const registro = registrosLocales[index];
+      if (!registro) return;
+      
+      // Para depuración
+      console.log("Mostrando detalles del registro:", registro);
+      
+      const modalBody = document.getElementById('detalleModalBody');
+      if (!modalBody) {
+        console.error("No se encontró el elemento detalleModalBody");
+        return;
+      }
+      
+      // Función auxiliar para obtener valor o texto por defecto
+      function getValue(obj, prop, defaultText = 'No especificado') {
+        if (!obj) return defaultText;
+        const value = obj[prop];
+        if (value === undefined || value === null || value === '') return defaultText;
+        return value;
+      }
+      
+      // Generar el HTML con todos los campos disponibles
+      const html = `
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12 mb-3">
+              <h4 class="border-bottom pb-2">Información General</h4>
+              <div class="row">
+                <div class="col-md-6">
+                  <p><strong>Fiscalía:</strong> ${getValue(registro, 'fiscalia')}</p>
+                  <p><strong>Fiscal a Cargo:</strong> ${getValue(registro, 'fiscalacargo')}</p>
+                </div>
+                <div class="col-md-6">
+                  <p><strong>Unidad de Inteligencia:</strong> ${getValue(registro, 'unidadInteligencia')}</p>
+                  <p><strong>Instructor a Cargo:</strong> ${getValue(registro, 'instructorCargo')}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-12 mb-3">
+              <h4 class="border-bottom pb-2">Detalles del Caso</h4>
+              <div class="row">
+                <div class="col-md-6">
+                  <p><strong>Forma de Inicio:</strong> ${getValue(registro, 'formaInicio')}</p>
+                  <p><strong>Carpeta Fiscal:</strong> ${getValue(registro, 'carpetaFiscal')}</p>
+                </div>
+                <div class="col-md-6">
+                  <p><strong>Fecha del Hecho:</strong> ${getValue(registro, 'fechaHecho')}</p>
+                  <p><strong>Fecha Ingreso Carpeta:</strong> ${getValue(registro, 'fechaIngresoFiscal')}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-12 mb-3">
+              <h4 class="border-bottom pb-2">Agraviado</h4>
+              <p><strong>Tipo de Agraviado:</strong> ${getValue(registro, 'tipoAgraviado')}</p>
+              <p><strong>Agraviados:</strong><br>${obtenerTextoDeCampo(registro, ['agraviados', 'agraviadosTexto', 'nombreAgraviado'])}</p>
+            </div>
+            
+            <div class="col-12 mb-3">
+              <h4 class="border-bottom pb-2">Denunciado</h4>
+              <div class="row">
+                <div class="col-md-6">
+                  <p><strong>Delitos:</strong> ${getValue(registro, 'delitos')}</p>
+                  <p><strong>Lugar de los Hechos:</strong> ${getValue(registro, 'lugarHechos')}</p>
+                  <p><strong>Denunciados/Alias:</strong><br>${obtenerTextoDeCampo(registro, ['denunciadosAlias', 'denunciado'])}</p>
+                </div>
+                <div class="col-md-6">
+                  <p><strong>Datos de Interés:</strong> ${obtenerTextoDeCampo(registro, ['datosInteresDenunciado', 'datosinteres'])}</p>
+                  <p><strong>Banda Criminal:</strong> ${getValue(registro, 'nombreBandaCriminal') || getValue(registro, 'nombreoapodo')}</p>
+                  <p><strong>Cantidad Miembros:</strong> ${getValue(registro, 'cantidadMiembrosBanda')}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-12 mb-3">
+              <h4 class="border-bottom pb-2">Sumilla de los Hechos</h4>
+              <p>${getValue(registro, 'sumillaHechos', 'No hay sumilla disponible')}</p>
+            </div>
+            
+            <div class="col-12">
+              <h4 class="border-bottom pb-2">Observaciones</h4>
+              <p>${getValue(registro, 'observaciones') || getValue(registro, 'observacion', 'No hay observaciones')}</p>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      modalBody.innerHTML = html;
+      
+      // Guardar el índice del registro actual en el botón editar si existe
+      const btnEditarDesdeDetalle = document.getElementById('btnEditarDesdeDetalle');
+      if (btnEditarDesdeDetalle) {
+        btnEditarDesdeDetalle.setAttribute('data-index', index);
+      }
+      
+      // Mostrar el modal
+      const modal = new bootstrap.Modal(document.getElementById('detalleModal'));
+      modal.show();
+    }    
+
+
+    // Editar desde el modal de detalles
+    function editarDesdeDetalle() {
+      const index = document.getElementById('btnEditarDesdeDetalle').getAttribute('data-index');
+      
+      // Cerrar el modal de detalles
+      const modal = bootstrap.Modal.getInstance(document.getElementById('detalleModal'));
+      modal.hide();
+      
+      // Cambiar a la pestaña del formulario
+      const formTab = new bootstrap.Tab(document.getElementById('form-tab'));
+      formTab.show();
+      
+      // Cargar los datos en el formulario
+      editarRegistro(index);
+    }
+    
+    // Editar registro
+
+   /*  function editarRegistro(index) {
+      const registro = registrosLocales[index];
+      if (!registro) {
+        console.error("No se encontró el registro para editar");
+        return;
+      }
+      
+      // Imprimir el registro para depuración
+      console.log("Editando registro:", registro);
+      // Cambiar a la pestaña del formulario si estamos en la pestaña de registros
+      const formTab = document.getElementById('form-tab');
+      if (formTab) {
+        const recordsTab = document.getElementById('records-tab');
+        if (recordsTab && recordsTab.classList.contains('active')) {
+          const tab = new bootstrap.Tab(formTab);
+          tab.show();
+        }
+      }
+
+      
+      // Establecer modo edición
+      //modoEdicion = true;
+      //document.getElementById('modoEdicion').value = 'true';
+      //document.getElementById('btnGuardar').innerHTML = '<i class="fas fa-save me-2"></i>Actualizar Registro';
+
+      // Establecer modo edición
+      modoEdicion = true;
+      const modoEdicionInput = document.getElementById('modoEdicion');
+      if (modoEdicionInput) {
+        modoEdicionInput.value = 'true';
+      }
+
+      // Cambiar texto del botón
+      const btnGuardar = document.getElementById('btnGuardar');
+      if (btnGuardar) {
+        btnGuardar.innerHTML = '<i class="fas fa-save me-2"></i>Actualizar Registro';
+      }
+      
+      // Llenar el formulario con los datos del registro
+      document.getElementById('id').value = registro.id;
+      
+      // Información General
+      document.getElementById('fiscalia').value = registro.fiscalia || '';
+      document.getElementById('fiscalacargo').value = registro.fiscalacargo || '';
+      document.getElementById('unidadInteligencia').value = registro.unidadInteligencia || '';
+      document.getElementById('instructorCargo').value = registro.instructorCargo || '';
+      
+      // Detalles del Caso
+      document.getElementById('formaInicio').value = registro.formaInicio || '';
+      document.getElementById('carpetaFiscal').value = registro.carpetaFiscal || '';
+      document.getElementById('fechaHecho').value = registro.fechaHecho || '';
+      document.getElementById('fechaIngresoFiscal').value = registro.fechaIngresoFiscal || '';
+      document.getElementById('fechadeingreso').value = registro.fechadeingreso || '';
+      
+      // Información del Agraviado
+      document.getElementById('tipoAgraviado').value = registro.tipoAgraviado || '';
+      agraviados = Array.isArray(registro.agraviados) ? [...registro.agraviados] : [];
+      actualizarListaAgraviados();
+      
+      // Información del Denunciado
+      document.getElementById('delitos').value = registro.delitos || '';
+      document.getElementById('lugarHechos').value = registro.lugarHechos || '';
+      denunciados = Array.isArray(registro.denunciadosAlias) ? [...registro.denunciadosAlias] : [];
+      actualizarListaDenunciados();
+      
+      // NUEVA SECCIÓN: Cargar datos de interés del denunciado
+      if (registro.datosInteresDenunciado) {
+        // Limpiar primero
+        //document.querySelectorAll('.datos-interes-check').forEach(check => check.checked = false);//---------------------------------------------------------------
+        document.querySelectorAll('.datos-interes-check').forEach(function(checkbox) {
+          checkbox.addEventListener('change', function() {
+            console.log(`Checkbox ${this.value} cambiado a: ${this.checked}`);
+            actualizarDatosInteresDenunciadoJson();
+          });
+        });
+        document.getElementById('datoInteres-otros').checked = false;
+        document.getElementById('otrosDatosInteresContainer').style.display = 'none';
+        
+        // Limpiar la lista de otros datos
+        const listaOtrosDatos = document.getElementById('otros-datos-interes-lista');
+        if (listaOtrosDatos) {
+          listaOtrosDatos.innerHTML = '';
+        }
+        
+        // Procesar datos
+        let datos = [];
+        if (typeof registro.datosInteresDenunciado === 'string') {
+          datos = registro.datosInteresDenunciado.split(', ');
+        } else if (Array.isArray(registro.datosInteresDenunciado)) {
+          datos = registro.datosInteresDenunciado;
+        }
+        
+        // Cargar cada dato
+        let tieneOtros = false;
+        datos.forEach(dato => {
+          // Verificar si es un dato estándar
+          if (dato === 'Tatuajes') {
+            document.getElementById('datoInteres-tatuajes').checked = true;
+          } else if (dato === 'Cicatrices') {
+            document.getElementById('datoInteres-cicatrices').checked = true;
+          } else if (dato.startsWith('Otros:')) {
+            // Es un dato específico de "Otros"
+            document.getElementById('datoInteres-otros').checked = true;
+            document.getElementById('otrosDatosInteresContainer').style.display = 'block';
+            
+            // Extraer el valor específico
+            const valorEspecifico = dato.substring(6).trim();
+            if (valorEspecifico && listaOtrosDatos) {
+              const div = document.createElement('div');
+              div.className = 'alert alert-info d-flex justify-content-between align-items-center mb-2 py-1 px-2';
+              div.innerHTML = `
+                <span class="otro-dato-interes">${valorEspecifico}</span>
+                <button type="button" class="btn btn-sm btn-close" onclick="eliminarDatoInteres(this)"></button>
+              `;
+              listaOtrosDatos.appendChild(div);
+            }
+          } else {
+            // Es un dato personalizado
+            document.getElementById('datoInteres-otros').checked = true;
+            document.getElementById('otrosDatosInteresContainer').style.display = 'block';
+            
+            if (listaOtrosDatos) {
+              const div = document.createElement('div');
+              div.className = 'alert alert-info d-flex justify-content-between align-items-center mb-2 py-1 px-2';
+              div.innerHTML = `
+                <span class="otro-dato-interes">${dato}</span>
+                <button type="button" class="btn btn-sm btn-close" onclick="eliminarDatoInteres(this)"></button>
+              `;
+              listaOtrosDatos.appendChild(div);
+            }
+          }
+        });
+        
+        // Actualizar JSON
+        if (typeof actualizarDatosInteresDenunciadoJson === 'function') {
+          actualizarDatosInteresDenunciadoJson();
+        }
+      } else {
+        // Para compatibilidad con el código anterior
+        document.getElementById('datosInteresDenunciado').value = registro.datosInteresDenunciado || '';
+      }
+      
+      document.getElementById('nombreBandaCriminal').value = registro.nombreBandaCriminal || '';
+      document.getElementById('cantidadMiembrosBanda').value = registro.cantidadMiembrosBanda || '';
+      document.getElementById('modalidadViolencia').value = registro.modalidadViolencia || '';
+      document.getElementById('modalidadAmenaza').value = registro.modalidadAmenaza || '';
+      document.getElementById('atentadosCometidos').value = registro.atentadosCometidos || '';
+      
+      // Instrumentos y Métodos de Extorsión
+      // PARTE MEJORADA: Cargar instrumentos de extorsión personalizados
+      if (Array.isArray(registro.instrumentosExtorsion)) {
+        // Limpiar primero los checkboxes
+        document.querySelectorAll('.instrumento-check').forEach(check => check.checked = false);
+        document.getElementById('instrumento-otro').checked = false;
+        document.getElementById('instrumento-otro-texto-container').style.display = 'none';
+        
+        // Limpiar la lista de otros instrumentos
+        const listaOtros = document.getElementById('otros-instrumentos-lista');
+        if (listaOtros) {
+          listaOtros.innerHTML = '';
+        }
+        
+        // Cargar cada instrumento
+        let tieneOtros = false;
+        registro.instrumentosExtorsion.forEach(instrumento => {
+          // Verificar si es un instrumento estándar
+          if (instrumento === 'Motos') {
+            document.getElementById('instrumento-motos').checked = true;
+          } else if (instrumento === 'Carros') {
+            document.getElementById('instrumento-carros').checked = true;
+          } else {
+            // Es un instrumento personalizado
+            tieneOtros = true;
+            document.getElementById('instrumento-otro').checked = true;
+            document.getElementById('instrumento-otro-texto-container').style.display = 'block';
+            
+            // Agregar a la lista de otros instrumentos
+            if (listaOtros) {
+              const div = document.createElement('div');
+              div.className = 'alert alert-info d-flex justify-content-between align-items-center mb-2 py-1 px-2';
+              div.innerHTML = `
+                <span class="otro-instrumento">${instrumento}</span>
+                <button type="button" class="btn btn-sm btn-close" onclick="this.parentElement.remove(); recopilarInstrumentosExtorsion();"></button>
+              `;
+              listaOtros.appendChild(div);
+            }
+          }
+        });
+        
+        // Actualizar JSON
+        recopilarInstrumentosExtorsion();
+      } else {
+        // Si no es un array, usar la función original
+        cargarInstrumentosExtorsion(registro.instrumentosExtorsion);
+      }
+      
+      // Forma de pago con soporte para "Otro"
+      const formaPagoSelect = document.getElementById('formaPago');
+      formaPagoSelect.value = registro.formaPago || '';
+      
+      // Si es "Otro", mostrar el campo adicional
+      if (formaPagoSelect.value === 'Otro') {
+        const otraFormaPagoContainer = document.getElementById('otraFormaPagoContainer');
+        if (otraFormaPagoContainer) {
+          otraFormaPagoContainer.style.display = 'block';
+          document.getElementById('otraFormaPago').value = registro.otraFormaPago || '';
+        }
+      }
+      
+      // Cargar números telefónicos y demás
+      numerosTelefonicos = Array.isArray(registro.numerosTelefonicos) ? [...registro.numerosTelefonicos] : [];
+      actualizarListaNumeros();
+      imeisTelefonicos = Array.isArray(registro.imeisTelefonicos) ? [...registro.imeisTelefonicos] : [];
+      actualizarListaImeis();
+      document.getElementById('cuentaPago').value = registro.cuentaPago || '';
+      titularesPago = Array.isArray(registro.titularesPago) ? [...registro.titularesPago] : [];
+      actualizarListaTitulares();
+      
+      // Cuentas de pago
+      cuentasPago = Array.isArray(registro.cuentasPago) ? [...registro.cuentasPago] : [];
+      actualizarListaCuentas();
+      
+      // PARTE MEJORADA: Manejar tipo de pago con opción personalizada
+      const tipoPagoSelect = document.getElementById('tipoPago');
+      
+      // Buscar si el tipo de pago ya existe como opción
+      let tipoEncontrado = false;
+      if (registro.tipoPago) {
+        // Primero intentamos usar el valor directo
+        if (registro.tipoPago === 'Mensual' || 
+            registro.tipoPago === 'Quincenal' || 
+            registro.tipoPago === 'Semanal' || 
+            registro.tipoPago === 'Único' || 
+            registro.tipoPago === 'Otro') {
+          tipoPagoSelect.value = registro.tipoPago;
+          tipoEncontrado = true;
+        } else {
+          // Buscar en las opciones existentes
+          for (let i = 0; i < tipoPagoSelect.options.length; i++) {
+            if (tipoPagoSelect.options[i].textContent === registro.tipoPago) {
+              tipoPagoSelect.selectedIndex = i;
+              tipoEncontrado = true;
+              break;
+            }
+          }
+        }
+        
+        // Si no lo encontramos y no es una opción estándar, crear opción personalizada
+        if (!tipoEncontrado && registro.tipoPago !== 'Otro') {
+          const nuevaOpcion = document.createElement('option');
+          nuevaOpcion.value = 'Custom:' + registro.tipoPago;
+          nuevaOpcion.textContent = registro.tipoPago;
+          tipoPagoSelect.appendChild(nuevaOpcion);
+          tipoPagoSelect.value = 'Custom:' + registro.tipoPago;
+        }
+        
+        // Si es "Otro", configurar el campo adicional
+        if (registro.tipoPago === 'Otro') {
+          document.getElementById('tipoPagoOtroContainer').style.display = 'block';
+          document.getElementById('tipoPagoOtros').value = registro.tipoPagoOtros || '';
+        } else {
+          document.getElementById('tipoPagoOtroContainer').style.display = 'none';
+        }
+      }
+      
+      // Resto de datos de pago
+      document.getElementById('montoSolicitado').value = registro.montoSolicitado || '';
+      document.getElementById('montoPagado').value = registro.montoPagado || '';
+      document.getElementById('numeroPagos').value = registro.numeroPagos || '';
+      
+      // Sumilla y Observaciones
+      document.getElementById('sumillaHechos').value = registro.sumillaHechos || '';
+      document.getElementById('observaciones').value = registro.observaciones || '';
+      
+      // Desplazarse al inicio del formulario
+      window.scrollTo(0, 0);
+    } */
+
+    function editarRegistro(index) {
+      const registro = registrosLocales[index];
+      if (!registro) {
+        console.error("No se encontró el registro para editar");
+        return;
+      }
+      
+      console.log("Editando registro:", registro);
+      
+      // Cambiar a la pestaña del formulario
+      const formTab = document.getElementById('form-tab');
+      const recordsTab = document.getElementById('records-tab');
+      
+      if (recordsTab.classList.contains('active')) {
+        const tab = new bootstrap.Tab(formTab);
+        tab.show();
+      }
+      
+      // Establecer modo edición
+      modoEdicion = true;
+      document.getElementById('modoEdicion').value = 'true';
+      document.getElementById('btnGuardar').innerHTML = '<i class="fas fa-save me-2"></i>Actualizar Registro';
+      
+      // Llenar el formulario con los datos del registro
+      document.getElementById('id').value = registro.id;
+      
+      // Información General
+      if (registro.fiscalia) document.getElementById('fiscalia').value = registro.fiscalia;
+      if (registro.fiscalacargo) document.getElementById('fiscalacargo').value = registro.fiscalacargo;
+      if (registro.unidadInteligencia) document.getElementById('unidadInteligencia').value = registro.unidadInteligencia;
+      if (registro.instructorCargo) document.getElementById('instructorCargo').value = registro.instructorCargo;
+      
+      // Detalles del Caso
+      if (registro.formaInicio) document.getElementById('formaInicio').value = registro.formaInicio;
+      if (registro.carpetaFiscal) document.getElementById('carpetaFiscal').value = registro.carpetaFiscal;
+      if (registro.fechaHecho) document.getElementById('fechaHecho').value = registro.fechaHecho;
+      if (registro.fechaIngresoFiscal) document.getElementById('fechaIngresoFiscal').value = registro.fechaIngresoFiscal;
+      if (registro.fechadeingreso) document.getElementById('fechadeingreso').value = registro.fechadeingreso;
+      
+      // Información del Agraviado
+      if (registro.tipoAgraviado) document.getElementById('tipoAgraviado').value = registro.tipoAgraviado;
+      
+      // IMPORTANTE: Restaurar agraviados
+      if (registro.agraviados && Array.isArray(registro.agraviados)) {
+        agraviados = [...registro.agraviados];
+        actualizarListaAgraviados();
+      }
+      
+      // IMPORTANTE: Restaurar campos problemáticos que mencionaste
+      // Función que ejerce
+      if (registro.funcionAgraviado) {
+        const funcionSelect = document.getElementById('funcionAgraviado');
+        if (funcionSelect) {
+          // Verificar si existe la opción
+          let opcionExiste = false;
+          for (let i = 0; i < funcionSelect.options.length; i++) {
+            if (funcionSelect.options[i].value === registro.funcionAgraviado) {
+              opcionExiste = true;
+              break;
+            }
+          }
+          
+          // Si no existe, añadirla
+          if (!opcionExiste && registro.funcionAgraviado) {
+            const nuevaOpcion = document.createElement('option');
+            nuevaOpcion.value = registro.funcionAgraviado;
+            nuevaOpcion.text = registro.funcionAgraviado;
+            funcionSelect.add(nuevaOpcion);
+          }
+          
+          funcionSelect.value = registro.funcionAgraviado;
+        }
+      }
+      
+      // Tipo de empresa
+      if (registro.tipoEmpresa) {
+        const tipoEmpresaSelect = document.getElementById('tipoEmpresa');
+        if (tipoEmpresaSelect) {
+          // Similar a lo anterior, verificar si existe la opción
+          let opcionExiste = false;
+          for (let i = 0; i < tipoEmpresaSelect.options.length; i++) {
+            if (tipoEmpresaSelect.options[i].value === registro.tipoEmpresa) {
+              opcionExiste = true;
+              break;
+            }
+          }
+          
+          if (!opcionExiste && registro.tipoEmpresa) {
+            const nuevaOpcion = document.createElement('option');
+            nuevaOpcion.value = registro.tipoEmpresa;
+            nuevaOpcion.text = registro.tipoEmpresa;
+            tipoEmpresaSelect.add(nuevaOpcion);
+          }
+          
+          tipoEmpresaSelect.value = registro.tipoEmpresa;
+        }
+      }
+      
+      // Nombre de empresa
+      if (registro.nombreEmpresa) {
+        const nombreEmpresaInput = document.getElementById('nombreEmpresa');
+        if (nombreEmpresaInput) {
+          nombreEmpresaInput.value = registro.nombreEmpresa;
+        }
+      }
+      
+      // Restaurar empresas
+      if (registro.empresas && Array.isArray(registro.empresas)) {
+        empresas = [...registro.empresas];
+        
+        // Actualizar visualización de empresas si existe
+        const listaEmpresas = document.getElementById('lista-empresas');
+        if (listaEmpresas) {
+          listaEmpresas.innerHTML = '';
+          
+          empresas.forEach(function(empresa) {
+            const div = document.createElement('div');
+            div.className = 'alert alert-info d-flex justify-content-between align-items-center mb-2 py-1 px-2';
+            div.innerHTML = `
+              <span>${empresa.tipo} (${empresa.nombre})</span>
+              <button type="button" class="btn btn-sm btn-close" onclick="eliminarEmpresa('${empresa.id}')"></button>
+            `;
+            
+            listaEmpresas.appendChild(div);
+          });
+        }
+        
+        // Actualizar campo oculto
+        document.getElementById('empresasJson').value = JSON.stringify(empresas);
+      }
+      
+      // Información del Denunciado
+      if (registro.delitos) document.getElementById('delitos').value = registro.delitos;
+      if (registro.lugarHechos) document.getElementById('lugarHechos').value = registro.lugarHechos;
+      
+      // Restaurar denunciados
+      if (registro.denunciadosAlias && Array.isArray(registro.denunciadosAlias)) {
+        denunciados = [...registro.denunciadosAlias];
+        actualizarListaDenunciados();
+      }
+      
+      // IMPORTANTE: Restaurar datos de interés del denunciado
+      if (registro.datosInteresDenunciado) {
+        // Limpiar primero
+        document.querySelectorAll('.datos-interes-check').forEach(check => check.checked = false);
+        document.getElementById('datoInteres-otros').checked = false;
+        document.getElementById('otrosDatosInteresContainer').style.display = 'none';
+        
+        // Limpiar la lista de otros datos
+        const listaOtrosDatos = document.getElementById('otros-datos-interes-lista');
+        if (listaOtrosDatos) {
+          listaOtrosDatos.innerHTML = '';
+        }
+        
+        // Cargar datos
+        let datos = [];
+        if (typeof registro.datosInteresDenunciado === 'string') {
+          datos = registro.datosInteresDenunciado.split(', ');
+        } else if (Array.isArray(registro.datosInteresDenunciado)) {
+          datos = registro.datosInteresDenunciado;
+        }
+        
+        // Marcar checkboxes
+        let tieneOtros = false;
+        datos.forEach(dato => {
+          if (dato === 'Tatuajes') {
+            document.getElementById('datoInteres-tatuajes').checked = true;
+          } else if (dato === 'Cicatrices') {
+            document.getElementById('datoInteres-cicatrices').checked = true;
+          } else {
+            // Si es otro dato
+            tieneOtros = true;
+            document.getElementById('datoInteres-otros').checked = true;
+            
+            // Agregar a la lista de otros
+            if (listaOtrosDatos) {
+              const div = document.createElement('div');
+              div.className = 'alert alert-info d-flex justify-content-between align-items-center mb-2 py-1 px-2';
+              div.innerHTML = `
+                <span class="otro-dato-interes">${dato}</span>
+                <button type="button" class="btn btn-sm btn-close" onclick="eliminarDatoInteres(this)"></button>
+              `;
+              listaOtrosDatos.appendChild(div);
+            }
+          }
+        });
+        
+        // Mostrar contenedor si hay datos personalizados
+        if (tieneOtros) {
+          document.getElementById('otrosDatosInteresContainer').style.display = 'block';
+        }
+        
+        // Actualizar campo JSON
+        document.getElementById('datosInteresDenunciadoJson').value = JSON.stringify(datos);
+      }
+      
+      // IMPORTANTE: Nombre/Apodo de Banda Criminal
+      if (registro.nombreBandaCriminal) {
+        const nombreBandaInput = document.getElementById('nombreBandaCriminal');
+        if (nombreBandaInput) {
+          nombreBandaInput.value = registro.nombreBandaCriminal;
+        }
+      }
+      
+      // Restaurar bandas criminales
+      if (registro.bandasCriminales && Array.isArray(registro.bandasCriminales)) {
+        bandasCriminales = [...registro.bandasCriminales];
+        
+        // Actualizar visualización
+        const bandasContainer = document.getElementById('bandas-container');
+        if (bandasContainer) {
+          // Limpiar elementos actuales pero mantener el input
+          const inputGroup = bandasContainer.querySelector('.input-group');
+          bandasContainer.innerHTML = '';
+          if (inputGroup) bandasContainer.appendChild(inputGroup);
+          
+          // Agregar cada banda
+          bandasCriminales.forEach(banda => {
+            const nuevaBanda = document.createElement('div');
+            nuevaBanda.className = 'banda-item mb-2 d-flex align-items-center';
+            nuevaBanda.innerHTML = `
+              <input type="text" class="form-control me-2" value="${banda}" readonly>
+              <button type="button" class="btn btn-outline-danger btn-sm" onclick="eliminarBanda(this, '${banda}')">
+                <i class="fas fa-times"></i>
+              </button>
+            `;
+            
+            // Insertar antes del campo de entrada
+            if (inputGroup) {
+              bandasContainer.insertBefore(nuevaBanda, inputGroup);
+            } else {
+              bandasContainer.appendChild(nuevaBanda);
+            }
+          });
+        }
+        
+        // Actualizar campo JSON
+        document.getElementById('bandasCriminalesJson').value = JSON.stringify(bandasCriminales);
+      }
+      
+      if (registro.cantidadMiembrosBanda) document.getElementById('cantidadMiembrosBanda').value = registro.cantidadMiembrosBanda;
+      if (registro.modalidadViolencia) document.getElementById('modalidadViolencia').value = registro.modalidadViolencia;
+      if (registro.modalidadAmenaza) document.getElementById('modalidadAmenaza').value = registro.modalidadAmenaza;
+      if (registro.atentadosCometidos) document.getElementById('atentadosCometidos').value = registro.atentadosCometidos;
+      
+      // IMPORTANTE: Restaurar instrumentos de extorsión
+      if (registro.instrumentosExtorsion && Array.isArray(registro.instrumentosExtorsion)) {
+        // Limpiar checkboxes primero
+        document.querySelectorAll('.instrumento-check').forEach(check => check.checked = false);
+        document.getElementById('instrumento-otro').checked = false;
+        document.getElementById('instrumento-otro-container').style.display = 'none';
+        
+        // Limpiar lista de otros instrumentos
+        const otrosInstrumentosLista = document.getElementById('otros-instrumentos-lista');
+        if (otrosInstrumentosLista) {
+          otrosInstrumentosLista.innerHTML = '';
+        }
+        
+        // Marcar los instrumentos correspondientes
+        registro.instrumentosExtorsion.forEach(instrumento => {
+          if (instrumento === 'Motos') {
+            document.getElementById('instrumento-motos').checked = true;
+          } else if (instrumento === 'Carros') {
+            document.getElementById('instrumento-carros').checked = true;
+          } else {
+            // Es un instrumento personalizado
+            document.getElementById('instrumento-otro').checked = true;
+            document.getElementById('instrumento-otro-container').style.display = 'block';
+            
+            // Añadir a la lista de otros instrumentos
+            if (otrosInstrumentosLista) {
+              const div = document.createElement('div');
+              div.className = 'alert alert-info d-flex justify-content-between align-items-center mb-2 py-1 px-2';
+              div.innerHTML = `
+                <span class="otro-instrumento">${instrumento}</span>
+                <button type="button" class="btn btn-sm btn-close" onclick="eliminarInstrumento(this)"></button>
+              `;
+              otrosInstrumentosLista.appendChild(div);
+            }
+          }
+        });
+        
+        // Actualizar campo JSON
+        document.getElementById('instrumentosJson').value = JSON.stringify(registro.instrumentosExtorsion);
+      }
+      
+      // Forma de pago
+      if (registro.formaPago) {
+        const formaPagoSelect = document.getElementById('formaPago');
+        if (formaPagoSelect) {
+          // Verificar si es "Otro"
+          if (registro.formaPago === 'Otro') {
+            formaPagoSelect.value = registro.formaPago;
+            document.getElementById('otraFormaPagoContainer').style.display = 'block';
+            if (registro.otraFormaPago) {
+              document.getElementById('otraFormaPago').value = registro.otraFormaPago;
+            }
+          } else {
+            // Verificar si existe como opción
+            let opcionExiste = false;
+            for (let i = 0; i < formaPagoSelect.options.length; i++) {
+              if (formaPagoSelect.options[i].value === registro.formaPago) {
+                opcionExiste = true;
+                break;
+              }
+            }
+            
+            // Si no existe, añadirla
+            if (!opcionExiste) {
+              const nuevaOpcion = document.createElement('option');
+              nuevaOpcion.value = registro.formaPago;
+              nuevaOpcion.text = registro.formaPago;
+              formaPagoSelect.add(nuevaOpcion);
+            }
+            
+            formaPagoSelect.value = registro.formaPago;
+          }
+        }
+      }
+      
+      // Restaurar listas dinámicas
+      if (registro.numerosTelefonicos && Array.isArray(registro.numerosTelefonicos)) {
+        numerosTelefonicos = [...registro.numerosTelefonicos];
+        actualizarListaNumeros();
+      }
+      
+      if (registro.imeisTelefonicos && Array.isArray(registro.imeisTelefonicos)) {
+        imeisTelefonicos = [...registro.imeisTelefonicos];
+        actualizarListaImeis();
+      }
+      
+      if (registro.cuentasPago && Array.isArray(registro.cuentasPago)) {
+        cuentasPago = [...registro.cuentasPago];
+        actualizarListaCuentas();
+      }
+      
+      if (registro.titularesPago && Array.isArray(registro.titularesPago)) {
+        titularesPago = [...registro.titularesPago];
+        actualizarListaTitulares();
+      }
+      
+      // Datos de pagos
+      if (registro.tipoPago) {
+        const tipoPagoSelect = document.getElementById('tipoPago');
+        if (tipoPagoSelect) {
+          // Verificar si es "Otro"
+          if (registro.tipoPago === 'Otro') {
+            tipoPagoSelect.value = 'Otro';
+            document.getElementById('tipoPagoOtroContainer').style.display = 'block';
+            document.getElementById('tipoPagoOtros').value = registro.tipoPagoOtros || '';
+          } else {
+            // Verificar si existe como opción
+            let opcionExiste = false;
+            for (let i = 0; i < tipoPagoSelect.options.length; i++) {
+              if (tipoPagoSelect.options[i].value === registro.tipoPago) {
+                opcionExiste = true;
+                break;
+              }
+            }
+            
+            // Si no existe, añadirla
+            if (!opcionExiste) {
+              const nuevaOpcion = document.createElement('option');
+              nuevaOpcion.value = registro.tipoPago;
+              nuevaOpcion.text = registro.tipoPago;
+              tipoPagoSelect.add(nuevaOpcion);
+            }
+            
+            tipoPagoSelect.value = registro.tipoPago;
+          }
+        }
+      }
+      
+      if (registro.montoSolicitado) document.getElementById('montoSolicitado').value = registro.montoSolicitado;
+      if (registro.montoPagado) document.getElementById('montoPagado').value = registro.montoPagado;
+      if (registro.numeroPagos) document.getElementById('numeroPagos').value = registro.numeroPagos;
+      
+      // Sumilla y observaciones
+      if (registro.sumillaHechos) document.getElementById('sumillaHechos').value = registro.sumillaHechos;
+      if (registro.observaciones) document.getElementById('observaciones').value = registro.observaciones;
+      
+      // Desplazarse al inicio del formulario
+      window.scrollTo(0, 0);
+      
+      console.log("Registro cargado en formulario para edición");
+    }
+
+    // Función para cargar agraviados (debes adaptarla a tu estructura)
+    function cargarAgraviados(agraviados) {
+      if (!agraviados || !Array.isArray(agraviados)) return;
+      
+      // Asegurar que la lista de agraviados esté actualizada en el formulario
+      try {
+        // Actualizar el campo JSON oculto
+        const agraviadosJsonElement = document.getElementById('agraviadosJson');
+        if (agraviadosJsonElement) {
+          agraviadosJsonElement.value = JSON.stringify(agraviados);
+        }
+        
+        // Actualizar la lista visual de agraviados
+        const listaAgraviadosElement = document.getElementById('listaAgraviados');
+        if (listaAgraviadosElement) {
+          listaAgraviadosElement.innerHTML = '';
+          
+          agraviados.forEach(agraviado => {
+            const div = document.createElement('div');
+            div.className = 'alert alert-info d-flex justify-content-between align-items-center py-1 mb-1';
+            div.innerHTML = `
+              <span>${agraviado.nombre || agraviado}</span>
+              <button type="button" class="btn btn-sm btn-danger" onclick="eliminarAgraviado('${agraviado.id || 'temp'}')">
+                <i class="fas fa-times"></i>
+              </button>
+            `;
+            listaAgraviadosElement.appendChild(div);
+          });
+        }
+        
+        // Actualizar el campo de texto que se enviará al servidor
+        const nombreAgraviadoElement = document.getElementById('nombreAgraviado');
+        if (nombreAgraviadoElement) {
+          nombreAgraviadoElement.value = agraviados.map(a => a.nombre || a).join(', ');
+        }
+      } catch (e) {
+        console.error("Error al cargar agraviados:", e);
+      }
+    }    
+    
+    // Cargar instrumentos de extorsión
+    function cargarInstrumentosExtorsion(instrumentos) {
+      // Desmarcar todos los checkboxes
+      document.querySelectorAll('.instrumento-check').forEach(function(check) {
+        check.checked = false;
+      });
+      
+      document.getElementById('instrumento-otro-texto').style.display = 'none';
+      document.getElementById('instrumento-otro-texto').value = '';
+      
+      if (!Array.isArray(instrumentos) || instrumentos.length === 0) return;
+      
+      // Marcar los checkboxes correspondientes
+      instrumentos.forEach(function(instrumento) {
+        let encontrado = false;
+        
+        document.querySelectorAll('.instrumento-check').forEach(function(check) {
+          if (check.value === instrumento) {
+            check.checked = true;
+            encontrado = true;
+          }
+        });
+        
+        // Si no se encontró entre los checkboxes predefinidos, agregarlo como "Otro"
+        if (!encontrado && instrumento) {
+          document.getElementById('instrumento-otro').checked = true;
+          document.getElementById('instrumento-otro-texto').style.display = 'block';
+          document.getElementById('instrumento-otro-texto').value = instrumento;
+        }
+      });
+    }
+    
+    // Confirmar eliminación
+    function confirmarEliminar(index) {
+      const registro = registrosLocales[index];
+      if (!registro) return;
+      
+      registroAEliminarId = registro.id;
+      
+      // Mostrar modal de confirmación
+      const modal = new bootstrap.Modal(document.getElementById('eliminarModal'));
+      modal.show();
+
+    }
+
+
+    function eliminarRegistro() {
+      if (!registroAEliminarId) return;
+      
+      mostrarCargando();
+      
+      // Eliminar del array local
+      const index = registrosLocales.findIndex(r => r.id === registroAEliminarId);
+      if (index !== -1) {
+        registrosLocales.splice(index, 1);
+        guardarRegistrosLocales(); // Guardar cambios en localStorage
+      }
+      
+      // También eliminar del servidor
+      google.script.run
+        .withSuccessHandler(function(result) {
+          ocultarCargando();
+          if (result.success) {
+            mostrarAlerta('Registro eliminado correctamente.', 'success');
+            
+            // Cerrar el modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('eliminarModal'));
+            modal.hide();
+            
+            // Recargar registros
+            mostrarRegistrosEnTabla(registrosLocales);
+          } else {
+            mostrarAlerta('Error al eliminar: ' + result.message, 'danger');
+          }
+        })
+        .withFailureHandler(function(error) {
+          ocultarCargando();
+          mostrarAlerta('Error al eliminar: ' + error, 'danger');
+        })
+        .eliminarRegistro(registroAEliminarId);
+    }
+    
+    // Buscar registros
+    function buscarRegistros() {
+      const termino = document.getElementById('buscarRegistro').value.toLowerCase();
+      
+      if (!termino || termino.length < 2) {
+        // Mostrar todos los registros si no hay término de búsqueda
+        mostrarRegistrosEnTabla(registrosLocales);
+        return;
+      }
+      
+      // Filtrar registros por el término de búsqueda
+      const resultados = registrosLocales.filter(function(registro) {
+        return (
+          (registro.fiscalia && registro.fiscalia.toLowerCase().includes(termino)) ||
+          (registro.fiscalacargo && registro.fiscalacargo.toLowerCase().includes(termino)) ||
+          (registro.carpetaFiscal && registro.carpetaFiscal.toLowerCase().includes(termino)) ||
+          (registro.agraviados && registro.agraviados.some(a => a.nombre && a.nombre.toLowerCase().includes(termino))) ||
+          (registro.denunciadosAlias && registro.denunciadosAlias.some(d => 
+            (d.nombre && d.nombre.toLowerCase().includes(termino)) || 
+            (typeof d === 'string' && d.toLowerCase().includes(termino))
+          ))
+        );
+      });
+      
+      mostrarRegistrosEnTabla(resultados);
+    }
+
+    
+    function cerrarSesion() {
+      const token = obtenerTokenSesion();
+      
+      // Mostrar algún indicador de carga si lo deseas
+      console.log("Cerrando sesión...");
+      
+      google.script.run
+        .withSuccessHandler(function(result) {
+          console.log("Sesión cerrada correctamente");
+          // Redirigir a la página de login
+          window.location.href = window.location.pathname;
+        })
+        .withFailureHandler(function(error) {
+          console.error("Error al cerrar sesión:", error);
+          // Aún intentar redirigir
+          window.location.href = window.location.pathname;
+        })
+        .cerrarSesion(token);
+    }
+
+      // Función para reinicializar todos los event listeners
+    function reinicializarEventListeners() {
+      console.log("Reinicializando event listeners para elementos dinámicos...");
+      
+      // Configurar los botones para agregar elementos
+      const configurarBoton = function(id, funcion) {
+        const boton = document.getElementById(id);
+        if (boton) {
+          console.log(`Configurando botón: ${id}`);
+          // Eliminar listeners existentes para evitar duplicados
+          const nuevoBoton = boton.cloneNode(true);
+          boton.parentNode.replaceChild(nuevoBoton, boton);
+          // Agregar nuevo listener
+          nuevoBoton.addEventListener('click', funcion);
+        } else {
+          console.warn(`Botón no encontrado: ${id}`);
+        }
+      };
+      
+      // Configurar todos tus botones dinámicos
+      configurarBoton('btnAgregarAgraviado', agregarAgraviado);
+      configurarBoton('btnAgregarDenunciado', agregarDenunciado);
+      configurarBoton('btnAgregarNumero', agregarNumeroTelefonico);
+      configurarBoton('btnAgregarImei', agregarImeiTelefonico);
+      configurarBoton('btnAgregarTitular', agregarTitularPago);
+      configurarBoton('btnAgregarCuenta', agregarCuentaPago);
+      
+      // Otros botones que puedas tener
+      configurarBoton('btnLimpiar', limpiarFormulario);
+      
+      // Botones para el manejo de otros elementos (instrumentos, datos de interés)
+      configurarBoton('btnAgregarOtroDatoInteres', function() {
+        if (typeof agregarOtroDatoInteres === 'function') {
+          agregarOtroDatoInteres();
+        }
+      });
+      
+      configurarBoton('btnAgregarInstrumentoOtro', function() {
+        if (typeof agregarOtroInstrumento === 'function') {
+          agregarOtroInstrumento();
+        }
+      });
+      
+      // Configurar el formulario principal
+      const formulario = document.getElementById('casoForm');
+      if (formulario) {
+        const nuevoFormulario = formulario.cloneNode(true);
+        formulario.parentNode.replaceChild(nuevoFormulario, formulario);
+        nuevoFormulario.addEventListener('submit', guardarFormulario);
+      }
+      
+      // Reinicializar listeners para checkboxes y selects
+      document.querySelectorAll('.form-check-input, .form-select').forEach(function(elem) {
+        elem.addEventListener('change', function() {
+          console.log(`Cambio en elemento: ${elem.id || 'sin-id'}`);
+        });
+      });
+      
+      // Configurar específicamente los checkboxes importantes
+      const checkOtro = document.getElementById('instrumento-otro');
+      if (checkOtro) {
+        checkOtro.addEventListener('change', function() {
+          const container = document.getElementById('instrumento-otro-texto-container');
+          if (container) {
+            container.style.display = this.checked ? 'block' : 'none';
+          }
+        });
+      }
+      
+      const checkDatosInteres = document.getElementById('datoInteres-otros');
+      if (checkDatosInteres) {
+        checkDatosInteres.addEventListener('change', function() {
+          const container = document.getElementById('otrosDatosInteresContainer');
+          if (container) {
+            container.style.display = this.checked ? 'block' : 'none';
+          }
+        });
+      }
+      
+      // Reinicializar listas existentes
+      if (typeof actualizarListaAgraviados === 'function') actualizarListaAgraviados();
+      if (typeof actualizarListaDenunciados === 'function') actualizarListaDenunciados();
+      if (typeof actualizarListaNumeros === 'function') actualizarListaNumeros();
+      if (typeof actualizarListaImeis === 'function') actualizarListaImeis();
+      if (typeof actualizarListaTitulares === 'function') actualizarListaTitulares();
+      if (typeof actualizarListaCuentas === 'function') actualizarListaCuentas();
+    }
+
+    // Función para contar caracteres en textareas
+    function contarCaracteres(elemento, idContador) {
+      const maxCaracteres = 500;
+      const longitudActual = elemento.value.length;
+      
+      // Actualizar el contador
+      document.getElementById(idContador).textContent = longitudActual;
+      
+      // Cambiar color cuando se acerca al límite
+      if (longitudActual > maxCaracteres * 0.8) {
+        document.getElementById(idContador).style.color = "#ff9900"; // Naranja
+      } else {
+        document.getElementById(idContador).style.color = ""; // Color por defecto
+      }
+      
+      // Cambiar color cuando se alcanza el límite
+      if (longitudActual >= maxCaracteres) {
+        document.getElementById(idContador).style.color = "#dc3545"; // Rojo
+      }
+    }
+
+  </script>
+</body>
+</html>
